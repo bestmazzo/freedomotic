@@ -1,0 +1,14 @@
+#Wed Jul 24 12:12:17 CEST 2013
+package.vendor.nation=it
+package.license=GNU GPL2
+package.vendor.name=Matteo
+package.version=3.0
+package.name=it.sed.easybox
+framework.required.minor=4
+package.vendor.surname=Mazzoni
+package.vendor.contact=matteo@bestmazzo.it
+package.nodeid=999999
+package.vendor.company=sed
+framework.required.major=5
+framework.required.build=x
+package.type=device

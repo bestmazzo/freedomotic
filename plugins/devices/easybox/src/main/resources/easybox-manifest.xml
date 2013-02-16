@@ -1,0 +1,290 @@
+<config>
+    <properties>
+<!-- DEVICE ADDRESS ip:port:node:type:id -->
+        <property name="description" value="Plugin for easybox realy boards from SED srl"/>
+        <property name="category" value="protocol"/>
+        <property name="short-name" value="easybox"/>
+        <property name="polling-time" value="800"/>
+        <property name="forcenotify-rule" value="15"/>
+        <property name="protocol.name"  value="easybox"/>
+        <property name="address-delimiter" value=":"/>
+ 	<property name="object.class" value="Light"/>
+    	<property name="powered" value="Easybox board reads a relay state change"/>
+   	<property name="turn on" value="Turn on relay on Easybox board"/>
+    	<property name="turn off" value="Turn off relay on Easybox board"/> 
+        <property name="startup-time"   value="on load"/>
+        <property name="debug" value="all"/>
+    </properties>
+    <tuples>
+         <tuple>
+            <property name="alias" value="PIANO1_1"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.158"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="1"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+         <tuple>
+            <property name="alias" value="PIANO1_2"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.158"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="2"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+         <tuple>
+            <property name="alias" value="PIANO1_3"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.158"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="3"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+         <tuple>
+            <property name="alias" value="PIANO1_4"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.158"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="4"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+         <tuple>
+            <property name="alias" value="PIANO1_5"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.158"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="5"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+         <tuple>
+            <property name="alias" value="PIANO1_6"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.158"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="6"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+         <tuple>
+            <property name="alias" value="PIANO1_7"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.158"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="7"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+         <tuple>
+            <property name="alias" value="PIANO1_8"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.158"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="8"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 <tuple>
+            <property name="alias" value="PIANO0_2"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="2"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 <tuple>
+            <property name="alias" value="PIANO0_3"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="3"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 <tuple>
+            <property name="alias" value="PIANO0_4"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="4"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 <tuple>
+            <property name="alias" value="PIANO0_5"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="5"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 <tuple>
+            <property name="alias" value="PIANO0_6"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="6"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 <tuple>
+            <property name="alias" value="PIANO0_7"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="7"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 <tuple>
+            <property name="alias" value="PIANO0_8"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="8"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 		 <tuple>
+            <property name="alias" value="PIANO0_9"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="9"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 		 <tuple>
+            <property name="alias" value="PIANO0_10"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="10"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+		 		 		 <tuple>
+            <property name="alias" value="PIANO0_11"/>
+            <property name="relay-init" value="false"/>
+            <property name="ip-to-query" value="192.168.128.160"/>
+            <property name="port-to-query" value="4001"/>
+            <property name="node-id" value="11"/>
+            <property name="relay-number" value="8"/>
+            <property name="digital-input-number" value="8"/>
+            <property name="line-config" value="T,T,T,T,T,T,T,T"/>
+            <property name="auto-configuration" value="false"/>
+            <property name="object.class" value="Light"/>
+            <property name="powered" value="Easybox board reads a relay state change"/>
+            <property name="turn on" value="Turn on relay on Easybox board"/>
+            <property name="turn off" value="Turn off relay on Easybox board"/>
+         </tuple>
+    </tuples>
+</config>
