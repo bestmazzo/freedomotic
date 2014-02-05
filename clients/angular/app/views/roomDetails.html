@@ -1,0 +1,49 @@
+<section class="col-lg-12 connectedSortable ui-sortable">
+    
+            <room-map zones="[room]" mode="image"></room-map>
+      
+    <div id="loading-example" class="box box-danger">
+        <div class="box-header" style="cursor: move;">
+            <!-- tools box -->
+            <div class="pull-right box-tools">
+                <button title="" data-toggle="tooltip" class="btn btn-danger btn-sm refresh-btn" data-original-title="Reload"><i class="fa fa-refresh"></i>
+                </button>
+                <button title="" data-toggle="tooltip" data-widget="collapse" class="btn btn-danger btn-sm" data-original-title="Collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button title="" data-toggle="tooltip" data-widget="remove" class="btn btn-danger btn-sm" data-original-title="Remove"><i class="fa fa-times"></i>
+                </button>
+            </div>
+            <!-- /. tools -->
+            <i class="fa fa-bars"></i>
+            <h3 class="box-title">{{room.name}} <small>Object List</small> <span class="badge">{{(room.objects | filter:query).length}}</span></h3>
+        </div>
+        <div class="box-body no-padding">
+            <div class="list-group">
+
+                <a ng-click="Switch(obj.name)" class="list-group-item" ng-repeat="obj in room.objects | filter:query | orderBy:'name'">
+
+                    <div class="row">
+                        <div class="col-md-1 col-xs-3 col-sm-2">
+                            <img ng-if="(obj.representation[obj.currentRepresentation].icon)" ng-src="{{RESTaddr}}v2/resources/{{obj.representation[obj.currentRepresentation].icon}}" class="img-rounded img-responsive" />
+                        </div>
+                        <div class="col-md-10 col-xs-8 col-sm-9">
+                            <div class="row">
+                                <div class="col-md-11 col-xs-9 col-sm-10">
+
+                                    <h4 class="list-group-item-heading">{{obj.name}}</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-11 col-xs-9 col-sm-10">
+                                    <p class="list-group-item-text">{{obj.description}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+

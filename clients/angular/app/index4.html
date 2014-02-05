@@ -1,0 +1,130 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/sass-bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <!-- Dark skinned theme -->
+    <!-- <link rel="stylesheet alternative" href="http://bootswatch.com/slate/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="styles/app.css">
+    <!-- endbuild -->
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 col-sm-8 col-xs-6 ">
+                <img src="images/Freedomotic_noBack.png" alt="Freedomotic" class="img-responsive">
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 col-md-push-6" ng-controller="LoginCtrl">
+                <button ng-show="signedIn" ng-click="alert(config)" class="btn btn-xs" ng-class="{ 'btn-warning' :($root.ApiStatus =='pending'), 'btn-success' : ($root.ApiStatus == 'good'),  'btn-danger': ($root.ApiStatus == 'error') }" popover="Host: {{config.addr}}; Port: {{config.port}}" popover-placement="bottom" popover-trigger="mouseenter">
+                    <span class="glyphicon glyphicon-flag"></span> Status
+                </button>
+                <button ng-show="signedIn" ng-click="logout()" class="btn btn-xs btn-default ">
+                    <span class="glyphicon glyphicon-user"></span> Logout
+                </button>
+            </div>
+            <div class="col-md-6 col-xs-12 col-sm-12 col-md-pull-2">
+                <ul class="nav nav-pills" ng-controller="NavigationCtrl">
+                    <li ng-show="signedIn" ng-repeat="item in items" ng-class="{active: isActive(item)}"><a ng-href="#{{item.path}}"><span class="glyphicon" ng-class="'glyphicon-{{item.icon}}'" ></span> {{item.title}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+                <ol ng-show="signedIn" class="breadcrumb" ng-controller="NavigationCtrl">
+                    <li ng-repeat="breadcrumb in breadcrumbs.getAll()">
+                        <ng-switch on="$last">
+                            <span ng-switch-when="true">{{breadcrumb.name}}</span>
+                            <span ng-switch-default><a ng-href="#{{breadcrumb.path}}">{{breadcrumb.name}}</a></span>
+                        </ng-switch>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="container" ng-view=""></div>
+    </div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-XXXXX-X');
+        ga('send', 'pageview');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/sass-bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/cordovaInit.js"></script>
+    <script src="scripts/controllers/login.js"></script>
+    <script src="scripts/controllers/environmentList.js"></script>
+    <script src="scripts/controllers/environmentDetails.js"></script>
+    <script src="scripts/controllers/roomDetails.js"></script>
+    <script src="scripts/controllers/objects.js"></script>
+    <script src="scripts/controllers/navigation.js"></script>
+    <script src="scripts/controllers/plugins.js"></script>
+    <script src="scripts/services/API.js"></script>
+    <script src="scripts/services/breadcrumbs.js"></script>
+    <script src="scripts/filters/gpFilters.js"></script>
+    <script src="scripts/controllers/commands.js"></script>
+    <script src="scripts/controllers/triggers.js"></script>
+    <script src="scripts/directives/roomMap.js"></script>
+    <script src="scripts/services/d3Service.js"></script>
+    <script src="scripts/directives/rightclick.js"></script>
+    <script src="scripts/directives/dragdrop.js"></script>
+    <script src="scripts/services/blocklyService.js"></script>
+    <script src="scripts/directives/commandEditor.js"></script>
+
+    <!-- endbuild -->
+
+</body>
+
+</html>

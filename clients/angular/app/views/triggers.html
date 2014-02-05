@@ -1,0 +1,9 @@
+<div class="page-header">
+    <h1>Trigger List <small>Search: <input ng-model="query"></small></h1>
+</div>
+
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="trg in triggers | filter:query | orderBy:'name'" >
+        <h4 class="list-group-item-heading">{{trg.name}}</h4>
+    </li>
+</ul>

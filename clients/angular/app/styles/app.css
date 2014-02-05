@@ -1,0 +1,39 @@
+/* app css stylesheet */
+
+.list-group-item-warning {
+    background-color: #FCF8E3;
+    color: #8A6D3B;
+}
+
+.list-group-item-success {
+    background-color: #DFF0D8;
+    color: #3C763D;
+}
+
+.line {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.objline {
+  fill: none;
+  pointer-events: all;
+  stroke: black;
+  
+  stroke-width: 0.5px;
+}
+svg {
+    height: 100%;
+    width: 100%;
+}
+
+.handle {
+   fill: yellow;
+   cursor: move;
+}
+
+.handle:hover {
+    stroke: red;
+    stroke-width: 1px;
+}
+

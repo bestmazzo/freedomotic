@@ -1,0 +1,71 @@
+<div class="box box-primary" cg-busy="{tracker:'ng'}">
+    <div class="box-header" style="cursor: move;" cg-busy="{tracker:'ng'}">
+        <!-- tools box -->
+        <div class="pull-right box-tools">
+            <button title="" data-toggle="tooltip" class="btn btn-primary btn-sm daterange pull-right" data-original-title="Date range"><i class="fa fa-calendar"></i>
+            </button>
+            <button style="margin-right: 5px;" title="" data-toggle="tooltip" data-widget="collapse" class="btn btn-primary btn-sm pull-right" data-original-title="Collapse"><i class="fa fa-minus"></i>
+            </button>
+        </div>
+        <!-- /. tools -->
+
+        <i class="fa fa-map-marker"></i>
+        <h3 class="box-title">Environment Map</h3>
+    </div>
+
+    <div class="box-body no-padding">
+        <alert type="'success'">Right-click on the map to modify rooms</alert>
+        <div id="world-map">
+            <div class="jvectormap-container" style="width: 100%; height: 100%; position: relative; overflow: hidden; background-color: rgb(255, 255, 255);">
+    <svg  xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"  
+    vbox="0 0 {{width}} {{height}}">
+        <defs >
+            <pattern ng-attr-id="a{{$index}}" 
+                     newidth="1" neheight="1" neviewBox="0 0 50 50" nopreserveAspectRatio="none"
+                     patternUnits="userSpaceOnUse" width="40" height="40" 
+                     ng-repeat="room in zones" ng-switch on="{{room.room}}">
+                <image ng-switch-when="true" ng-if="(room.texture)"
+                       xlink:href="" ng-href="{{texpath(room.texture)}}" 
+                       newidth="50" neheight="50" nopreserveAspectRatio="none"
+                       width="40px" height="40px" />
+            </pattern>
+        </defs>
+        <image x="0" y="0" xlink:href=""
+                   ng-href="{{mappath(env.backgroundImage)}}" ng-attr-width="{{width}}" ng-attr-height="{{height}}"/>
+        <g ng-attr-transform="{{transform}}" >
+            
+            <g class="room" ng-repeat="room in zones" ng-switch on="{{room.room}}">
+                <g ng-switch-when="true">
+                    <path class="line" fill="url(#a{{$index}})" 
+                          ng-attr-d="{{line(room.shape.points)}}" 
+                          ng-click="roomclick(room.name)"
+                          ng-right-click="rightclickroom(room.name)"></path>
+                            <circle class="handle" style="visibility: hidden;" ng-repeat="point in room.shape.points" 
+                            ng-attr-cx="{{point.x}}" ng-attr-cy="{{point.y}}" r="10" ng-mousemove="updateHandle($event, point)"/>
+                    <g ng-repeat="obj in room.objects" ng-attr-id="{{obj.uuid}}"
+                       ng-click="objclick(obj.name)" xlink:href="" 
+                       ng-right-click="rightclickobj(obj.name)"
+                       ng-init="repr = obj.representation[obj.currentRepresentation]"
+                       >
+                        <path class="objline" ng-attr-d="{{line(repr.shape.points)}}" 
+                              ng-attr-transform="translate({{repr.offset.x}},{{repr.offset.y}}) scale({{repr.scaleX +1}} {{repr.scaleY +1}}) rotate({{repr.rotation}})" 
+                              ng-attr-stroke="{{repr.borderColor}}" stroke=""
+                              ng-attr-fill="{{repr.fillColor}}" fill=""
+                              ng-if="(!repr.icon)" />
+                        <image ng-attr-x="{{repr.offset.x}}" 
+                               ng-attr-y="{{repr.offset.y}}" 
+                               ng-if="(repr.icon)"
+                               width="64" height="64" xlink:href=""
+                               ng-href="{{respath(repr.icon)}}" />
+                             
+                    </g>
+                </g>
+            </g>
+        </g>
+    </svg>
+                <div class="jvectormap-zoomin">+</div>
+                <div class="jvectormap-zoomout">−</div>
+            </div>
+        </div>
+    </div>
+</div>

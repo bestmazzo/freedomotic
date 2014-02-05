@@ -1,0 +1,50 @@
+<div nong-if="signedIn" id="login-box" class="form-box">
+    <div class="header">Please sign In</div>
+    <form role="form" ng-controller="LoginCtrl">
+        <div class="body bg-gray">
+            <div class="form-group">
+                <label>Freedomotic API address</label>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-addon">
+                        <i class="fa fa-laptop"></i>
+                    </div>
+                    <input class="form-control" name="conf-addr" ng-model="config.addr" type="text" autofocus="" required="" />
+                </div>
+                <label>Port</label>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-addon">
+                        <i class="fa fa-crosshairs"></i>
+                    </div>
+                    <input class="form-control" name="conf-port" ng-model="config.port" type="number" min="1" max="65536" required="" />
+                </div>
+                <label>Use SSL</label>
+                <input type="checkbox" name="conf-ssl" ng-model="config.ssl" />
+            </div>
+            <div class="form-group">
+                <label>Username</label>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-addon">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <input class="form-control" name="conf-user" ng-model="config.user" type="text" />
+                </div>
+
+                <label>Password</label>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-addon">
+                        <i class="fa fa-key"></i>
+                    </div>
+                    <input class="form-control" name="conf-pass" ng-model="config.password" type="password" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Remember me</label>
+                <input type="checkbox" name="conf-remember" ng-model="config.rememberMe" value="remember-me" />
+                
+            </div>
+        </div>
+        <div class="footer bg-gray">
+            <button class="btn btn-lg bg-olive btn-block" ng-click="login(config)">Sign in</button>
+        </div>
+    </form>
+</div>
