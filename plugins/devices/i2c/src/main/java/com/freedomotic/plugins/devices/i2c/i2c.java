@@ -1,12 +1,6 @@
 package com.freedomotic.plugins.devices.i2c;
 
 import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.PinPullResistance;
-import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.io.gpio.GpioFactory;
-
-import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
-import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
@@ -20,6 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
+import com.pi4j.io.gpio.GpioProvider;
+
 
 public class i2c extends Protocol {
 
@@ -27,7 +24,7 @@ public class i2c extends Protocol {
     private I2CDevice dev;
     private I2CBus bus;
     private GpioPinDigitalInput i2c_int;
-    private ArrayList<Board> boards;
+    private ArrayList<GpioProvider> boards;
     private int DEV_NUMBER;
     // address = dev_i2c_address: line_number 
     private String[] address = null;
@@ -63,7 +60,7 @@ public class i2c extends Protocol {
 
     @Override
     protected void onRun() {
-        Freedomotic.logger.info("I2C onRun() logs this message every "
+        LOG.info("I2C onRun() logs this message every "
                 + "POLLINGWAIT=" + POLLING_WAIT + "milliseconds");
         //at the end of this method the system waits POLLINGTIME 
         //before calling it again. The result is this log message is printed
@@ -73,48 +70,17 @@ public class i2c extends Protocol {
 
     @Override
     protected void onStart() {
-        Freedomotic.logger.info("I2C plugin is started");
+        LOG.info("I2C plugin is started");
 
 
         try {
             bus = I2CFactory.getInstance(I2CBus.BUS_0);
         } catch (IOException ex) {
-            Logger.getLogger(i2c.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
 
-        // provision gpio pin #02 as an input pin with its internal pull down resistor enabled
-        // (configure pin edge to both rising and falling to get notified for HIGH and LOW state
-        // changes)
-        i2c_int = GpioFactory.getInstance().provisionDigitalInputPin(RaspiPin.GPIO_02, // PIN NUMBER
-                "MyButton", // PIN FRIENDLY NAME (optional)
-                PinPullResistance.PULL_DOWN); // PIN RESISTANCE (optional)   
-        // create and register gpio pin listener
-        i2c_int.addListener(new GpioPinListenerDigital() {
-            @Override
-            public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-                // display pin state on console
-                System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
-                // scan i2c Bus for changes
-                for (Board board : boards) {
-                    try {
-                        dev = bus.getDevice(board.getAddress());
-                        int globVal = dev.read();
-                        int val = 0;
-                        for (int i = 0; i < 8; i++) {
-                            val = (globVal >> i) & 0x0001; //extract i-pos bit of byte
-                            if (board.setLineStatus(i, val)) {
-                                String EVaddress = board.getAddress() + ":" + i;
-                                notifyChangeEvent(EVaddress, val);
-                            }
-                        }
-                    } catch (IOException ex) {
-                        Logger.getLogger(i2c.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                }
-            }
-        });
-
+      
+      
         DEV_NUMBER = configuration.getTuples().size();
         int devAddr;
         int devNum;
@@ -123,7 +89,6 @@ public class i2c extends Protocol {
             devAddr = configuration.getTuples().getIntProperty(i, "address", 0);
             devNum = configuration.getTuples().getIntProperty(i, "line-number", 0);
             alias = configuration.getTuples().getStringProperty(i, "alias", "");
-            boards.add(new Board(devAddr, devNum, alias));
         }
 
 
@@ -131,13 +96,13 @@ public class i2c extends Protocol {
 
     @Override
     protected void onStop() {
-        Freedomotic.logger.info("I2C plugin is stopped ");
+        LOG.info("I2C plugin is stopped ");
 
 
         try {
             bus.close();
         } catch (IOException ex) {
-            Logger.getLogger(i2c.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
 
         i2c_int.unexport();
@@ -147,7 +112,7 @@ public class i2c extends Protocol {
 
     @Override
     protected void onCommand(Command c) throws IOException, UnableToExecuteException {
-        Freedomotic.logger.info("I2C plugin receives a command called " + c.getName()
+        LOG.info("I2C plugin receives a command called " + c.getName()
                 + " with parameters " + c.getProperties().toString());
         String delimiter = configuration.getProperty("address-delimiter");
         address = c.getProperty("address").split(delimiter);
@@ -161,20 +126,20 @@ public class i2c extends Protocol {
             value = -1;
         }
 
-        for (Board board : boards) {
+       /* for (Board board : boards) {
             if ((board.getAddress() == Integer.parseInt(address[0])) || (board.getAlias().equals(address[0]))) {
                 short lineID = Short.parseShort(address[1]);
                 dev = bus.getDevice(board.getAddress());
                 dev.write(board.toBeWritten(line, value));
             }
         }
-
+*/
 
     }
 
     private void notifyChangeEvent(String device_address, int val) {
 
-        Freedomotic.logger.log(Level.INFO, "Sending I2C protocol read event for object address ''{0}''. It''s readed status is {1}", new Object[]{device_address, val});
+        LOG.log(Level.INFO, "Sending I2C protocol read event for object address ''{0}''. It''s readed status is {1}", new Object[]{device_address, val});
         //building the event
         ProtocolRead event = new ProtocolRead(this, "i2c", device_address); //IP:PORT:RELAYLINE
 
@@ -203,4 +168,6 @@ public class i2c extends Protocol {
         //don't mind this method for now
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+    private static final Logger LOG = Logger.getLogger(i2c.class.getName());
 }
