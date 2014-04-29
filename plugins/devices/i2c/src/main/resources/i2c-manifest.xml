@@ -1,5 +1,3 @@
-
-
 <config>
     <properties>
         <property name="name" value="i2c"/>
@@ -20,9 +18,19 @@
     </properties>
     <tuples>
         <tuple>
-            <property name="address" value="" />
-            <property name="" value=""/>
-            <property name="" value=""/>
+            <property name="address" value="0x20" />
+            <property name="chip" value="PCF8574T"/>
+            <property name="lines" value="i,i,i,i,i,i,i,i"/>
+        </tuple>
+        <tuple>
+            <property name="address" value="0x21" />
+            <property name="chip" value="PCF8574T"/>
+            <property name="lines" value="i,i,i,i,i,i,i,i"/>
+        </tuple>
+        <tuple>
+            <property name="address" value="0x38" />
+            <property name="chip" value="PCF8574T"/>
+            <property name="lines" value="o,o,o,o,o,o,o,o"/>
         </tuple>
     </tuples>
 </config>
