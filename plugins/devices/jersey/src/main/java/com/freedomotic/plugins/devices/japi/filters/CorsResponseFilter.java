@@ -29,8 +29,12 @@ package com.freedomotic.plugins.devices.japi.filters;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
- 
-public class CorsFilter implements ContainerResponseFilter {
+import javax.ws.rs.container.PreMatching;
+import javax.ws.rs.ext.Provider;
+
+@Provider
+@PreMatching
+public class CorsResponseFilter implements ContainerResponseFilter {
     /**
      * Add the cross domain data to the output if needed
      *
@@ -39,8 +43,9 @@ public class CorsFilter implements ContainerResponseFilter {
      */
     @Override
     public void filter(ContainerRequestContext creq, ContainerResponseContext cres) {
+        
         cres.getHeaders().add("Access-Control-Allow-Origin", "*");
-        cres.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+        cres.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, x-access-token");
         cres.getHeaders().add("Access-Control-Allow-Credentials", "true");
         cres.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         cres.getHeaders().add("Access-Control-Max-Age", "1209600");
