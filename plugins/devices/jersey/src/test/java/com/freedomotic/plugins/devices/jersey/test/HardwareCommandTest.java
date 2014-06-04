@@ -35,7 +35,6 @@ public class HardwareCommandTest extends AbstractTest<Command>{
         item = new Command();
         item.setName("TestCmd");
         item.setUUID(uuid);
-        container = api.commands();
         item.setProperty("prop1", "value1");
         item.setReceiver("receiver.channel");
         item.setHardwareLevel(true);

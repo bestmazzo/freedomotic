@@ -114,7 +114,8 @@ public class RestJersey
   
         // enable CORS 
         if (configuration.getBooleanProperty("enable-cors", false)) {
-            resourceConfig.registerClasses(CorsRequestFilter.class, CorsResponseFilter.class);
+            resourceConfig.registerClasses(CorsRequestFilter.class);
+            resourceConfig.register(new CorsResponseFilter(this.configuration));
         }
 
         // enable log

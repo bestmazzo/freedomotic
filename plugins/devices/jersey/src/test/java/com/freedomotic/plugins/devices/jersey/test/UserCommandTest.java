@@ -32,7 +32,6 @@ public class UserCommandTest extends AbstractTest<Command>{
 
     @Override
     public void init() throws UriBuilderException, IllegalArgumentException {
-        container = api.commands();
         item = new Command();
         item.setName("TestCmd");
         item.setUUID(uuid);

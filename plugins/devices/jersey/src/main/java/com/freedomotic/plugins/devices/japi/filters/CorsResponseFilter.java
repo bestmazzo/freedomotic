@@ -26,6 +26,7 @@ package com.freedomotic.plugins.devices.japi.filters;
  * @author matteo
  */
 
+import com.freedomotic.model.ds.Config;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
@@ -41,14 +42,30 @@ public class CorsResponseFilter implements ContainerResponseFilter {
      * @param creq The container request (input)
      * @param cres The container request (output)
      */
+    Config config;
+    public CorsResponseFilter(Config config){
+        this.config = config;
+    }
+    
     @Override
     public void filter(ContainerRequestContext creq, ContainerResponseContext cres) {
         
-        cres.getHeaders().add("Access-Control-Allow-Origin", "*");
-        cres.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, x-access-token");
+        cres.getHeaders().add("Access-Control-Allow-Origin", 
+                config.getStringProperty("Access-Control-Allow-Origin","*"));
+        
+        cres.getHeaders().add("Access-Control-Allow-Headers", 
+                config.getStringProperty("Access-Control-Allow-Headers",
+                              "Accept,Accept-Version,Authorization,Content-Length,Content-MD5,Content-Type,Date,"
+                            + "Origin,X-Access-Token,X-Api-Version,X-CSRF-Token,X-File-Name,X-Requested-With"));
+        
+        cres.getHeaders().add("Access-Control-Allow-Methods", 
+                config.getStringProperty("Access-Control-Allow-Methods", "GET,PUT,HEAD,POST,DELETE,OPTIONS"));
+        
+        cres.getHeaders().add("Access-Control-Max-Age", 
+                config.getStringProperty("Access-Control-Max-Age", "1209600"));
+        
         cres.getHeaders().add("Access-Control-Allow-Credentials", "true");
-        cres.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        cres.getHeaders().add("Access-Control-Max-Age", "1209600");
+        
     }
 }
  
