@@ -248,17 +248,16 @@ angular.module('fdappApp').service('Env', function($resource, $rootScope) {
       var sse = new EventSource($rootScope.RESTaddr + 'v3/events/plugin', { withCredentials: true });
      // After SSE handshake constructed
 	sse.onopen = function (e) {
-	 alert("Waiting message..");
+	 //alert("Waiting message..");
 	};
 	 
 	// Error handler
 	sse.onerror = function (e) {
-	 alert("Error");
 	 console.log(e);
 	};
      // Message handler
 	sse.onmessage=function (e) {
-	   alertg(e);
+	 //  alert(e);
     };	 
       return {
         addEventListener: function(eventName, callback) {
