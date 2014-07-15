@@ -47,7 +47,7 @@ class ModbusGateway extends Thread {
     private String ipAddress;
     private int tcpPort;
     private int nProveTx;
-    private BufferModbus bufIn = new BufferModbus((short) 256);
+    private BufferModbus bufIn;
     private byte comando;
     private int sizeRx, lenRx;
     private HashMap<Byte, Nodo> listaNodi = new HashMap<Byte, Nodo>();
@@ -66,7 +66,7 @@ class ModbusGateway extends Thread {
         try {
             socketStream.close();
         } catch (IOException ex) {
-            Logger.getLogger(ModbusGateway.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -123,11 +123,13 @@ class ModbusGateway extends Thread {
     // costruttore
 
     public ModbusGateway(String ipAddress, int tcpPort, int nProveTx, QueueStrategy strat, int sockTimeOut) {
+        this.bufIn = new BufferModbus((short) 256);
         setQueueStrategy(strat);
         init(ipAddress, tcpPort, nProveTx, sockTimeOut);
     }
 
     public ModbusGateway(String ipAddress, int tcpPort, int nProveTx, int sockTimeOut) {
+        this.bufIn = new BufferModbus((short) 256);
         setQueueStrategy(new WriteFirstQueue());
         init(ipAddress, tcpPort, nProveTx, sockTimeOut);
     }

@@ -17,11 +17,11 @@
  */
 package it.sed.easybox;
 
-import it.freedomotic.api.EventTemplate;
-import it.freedomotic.api.Protocol;
-import it.freedomotic.events.ProtocolRead;
-import it.freedomotic.exceptions.UnableToExecuteException;
-import it.freedomotic.reactions.Command;
+import com.freedomotic.api.EventTemplate;
+import com.freedomotic.api.Protocol;
+import com.freedomotic.events.ProtocolRead;
+import com.freedomotic.exceptions.UnableToExecuteException;
+import com.freedomotic.reactions.Command;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
