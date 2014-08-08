@@ -60,6 +60,7 @@ public class ModbusTestMain {
         //TCP Test
         config.setProperty("host", "192.168.1.9");
         config.setProperty("tcpport", String.valueOf(502));
+        config.setProperty("isRTUoverTCP", "true");
 
 
 

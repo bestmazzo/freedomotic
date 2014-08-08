@@ -44,20 +44,20 @@ import com.freedomotic.model.ds.Config;
 class FreedomModbusLocator {
 
     private BaseLocator modbusLocator;
-    private String name;
-    private int slaveId;
-    private int registerRange;
-    private int dataType;
-    private int offset;
+    private final String name;
+    private final int slaveId;
+    private final int registerRange;
+    private final int dataType;
+    private final int offset;
     //private int numberOfRegisters;
-    private Byte bit;
+    private final Byte bit;
     //private String characterEncoding;
-    private Double multiplier;
-    private Double additive;
-    private String eventName;
-    private String objectName;
-    private String objectClass;
-    private String objectBehavior;
+    private final Double multiplier;
+    private final Double additive;
+    private final String eventName;
+    private final String objectName;
+    private final String objectClass;
+    private final String objectBehavior;
     //used to store the lastvalue readed and only send if changes
     //TODO: to be used
     private Object lastValueReaded;
@@ -81,13 +81,23 @@ class FreedomModbusLocator {
         objectClass = configuration.getTuples().getStringProperty(i, "objectClass", "");
         objectBehavior = configuration.getTuples().getStringProperty(i, "objectBehavior", "");
 
-
+        //TODO: use the number of registers
+        //numberOfRegisters= configuration.getTuples().getIntProperty(i,"NumberOfRegisters",1);
+        //At this moment the characterEncoding is not necesary
+        //characterEncoding=configuration.getTuples().getStringProperty(i,"CharacterEncoding","ASCII");         
+        multiplier = configuration.getTuples().getDoubleProperty(i, "Multiplier", 1);
+        additive = configuration.getTuples().getDoubleProperty(i, "Additive", 0);
+        eventName = configuration.getTuples().getStringProperty(i, "EventName", "Event");
+        //we try to parse the bit value.
+        bit = Byte.valueOf(configuration.getTuples().getStringProperty(i, "Bit", "-1"));
+        init();
+    }
+    
+    private void init(){
         //TODO: The Modbus4j functionality must be extend to allow to read and combine several "bit" values from
         // the same register. For example bit1&bit2 generates a 4 four states value and there are Slaves that uses this format,
         // and should be abstracted.
 
-        //we try to parse the bit value.
-        bit = Byte.valueOf(configuration.getTuples().getStringProperty(i, "Bit", "-1"));
         if (bit != -1) {
             if (registerRange != RegisterRange.HOLDING_REGISTER
                     && registerRange != RegisterRange.INPUT_REGISTER) {
@@ -103,14 +113,7 @@ class FreedomModbusLocator {
                 modbusLocator = new NumericLocator(slaveId, registerRange, offset, dataType);
             }
         }
-        //TODO: use the number of registers
-        //numberOfRegisters= configuration.getTuples().getIntProperty(i,"NumberOfRegisters",1);
-        //At this moment the characterEncoding is not necesary
-        //characterEncoding=configuration.getTuples().getStringProperty(i,"CharacterEncoding","ASCII");         
-        multiplier = configuration.getTuples().getDoubleProperty(i, "Multiplier", 1);
-        additive = configuration.getTuples().getDoubleProperty(i, "Additive", 0);
-        eventName = configuration.getTuples().getStringProperty(i, "EventName", "Event");
-
+        
     }
 
     private int parseRegisterRange(String stringProperty) {
@@ -118,57 +121,59 @@ class FreedomModbusLocator {
         //TODO: Check that the RegisterRange is correct
         //TODO: use an enum?
         // Admited values: CoilStatus, InputStatus, HoldingRegister, InputRegister
-        if (stringProperty.equals("COIL_STATUS")) {
-            return 1;
-        } else if (stringProperty.equals("INPUT_STATUS")) {
-            return 2;
-        } else if (stringProperty.equals("HOLDING_REGISTER")) {
-            return 3;
-        } else if (stringProperty.equals("INPUT_REGISTER")) {
-            return 4;
-        } else {
-            return -1; //TODO: Handle format error
+        switch (stringProperty) {
+            case "COIL_STATUS":
+                return 1;
+            case "INPUT_STATUS":
+                return 2;
+            case "HOLDING_REGISTER":
+                return 3;
+            case "INPUT_REGISTER":
+                return 4;
+            default:
+                return -1; //TODO: Handle format error
         }
     }
 
     private int parseDataType(String stringProperty) {
 
-        if (stringProperty.equals("BINARY")) {
-            return 1;
-        } else if (stringProperty.equals("TWO_BYTE_INT_UNSIGNED")) {
-            return 2;
-        } else if (stringProperty.equals("TWO_BYTE_INT_SIGNED")) {
-            return 3;
-        } else if (stringProperty.equals("FOUR_BYTE_INT_UNSIGNED")) {
-            return 4;
-        } else if (stringProperty.equals("FOUR_BYTE_INT_SIGNED")) {
-            return 5;
-        } else if (stringProperty.equals("FOUR_BYTE_INT_UNSIGNED_SWAPPED")) {
-            return 6;
-        } else if (stringProperty.equals("FOUR_BYTE_INT_SIGNED_SWAPPED")) {
-            return 7;
-        } else if (stringProperty.equals("FOUR_BYTE_FLOAT")) {
-            return 8;
-        } else if (stringProperty.equals("FOUR_BYTE_FLOAT_SWAPPED")) {
-            return 9;
-        } else if (stringProperty.equals("EIGHT_BYTE_INT_UNSIGNED")) {
-            return 10;
-        } else if (stringProperty.equals("EIGHT_BYTE_INT_SIGNED")) {
-            return 11;
-        } else if (stringProperty.equals("EIGHT_BYTE_INT_UNSIGNED_SWAPPED")) {
-            return 12;
-        } else if (stringProperty.equals("EIGHT_BYTE_INT_SIGNED_SWAPPED")) {
-            return 13;
-        } else if (stringProperty.equals("EIGHT_BYTE_FLOAT")) {
-            return 14;
-        } else if (stringProperty.equals("EIGHT_BYTE_FLOAT_SWAPPED")) {
-            return 15;
-        } else if (stringProperty.equals("TWO_BYTE_BCD")) {
-            return 16;
-        } else if (stringProperty.equals("FOUR_BYTE_BCD")) {
-            return 17;
-        } else {
-            return -1; //TODO: Handle format error
+        switch (stringProperty) {
+            case "BINARY":
+                return 1;
+            case "TWO_BYTE_INT_UNSIGNED":
+                return 2;
+            case "TWO_BYTE_INT_SIGNED":
+                return 3;
+            case "FOUR_BYTE_INT_UNSIGNED":
+                return 4;
+            case "FOUR_BYTE_INT_SIGNED":
+                return 5;
+            case "FOUR_BYTE_INT_UNSIGNED_SWAPPED":
+                return 6;
+            case "FOUR_BYTE_INT_SIGNED_SWAPPED":
+                return 7;
+            case "FOUR_BYTE_FLOAT":
+                return 8;
+            case "FOUR_BYTE_FLOAT_SWAPPED":
+                return 9;
+            case "EIGHT_BYTE_INT_UNSIGNED":
+                return 10;
+            case "EIGHT_BYTE_INT_SIGNED":
+                return 11;
+            case "EIGHT_BYTE_INT_UNSIGNED_SWAPPED":
+                return 12;
+            case "EIGHT_BYTE_INT_SIGNED_SWAPPED":
+                return 13;
+            case "EIGHT_BYTE_FLOAT":
+                return 14;
+            case "EIGHT_BYTE_FLOAT_SWAPPED":
+                return 15;
+            case "TWO_BYTE_BCD":
+                return 16;
+            case "FOUR_BYTE_BCD":
+                return 17;
+            default:
+                return -1; //TODO: Handle format error
         }
     }
 

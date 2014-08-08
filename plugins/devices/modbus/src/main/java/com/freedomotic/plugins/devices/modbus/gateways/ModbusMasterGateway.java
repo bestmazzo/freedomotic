@@ -26,7 +26,6 @@ import com.serotonin.io.serial.SerialParameters;
 import com.serotonin.modbus4j.ModbusFactory;
 import com.serotonin.modbus4j.ModbusMaster;
 import com.serotonin.modbus4j.ip.IpParameters;
-import com.serotonin.modbus4j.serial.SerialMaster;
 import gnu.io.SerialPort;
 import com.freedomotic.model.ds.Config;
 
@@ -67,7 +66,7 @@ public class ModbusMasterGateway {
                 configureSerial(configuration);
             }
             //private static boolean echo = false;
-            int receiveTimeout = configuration.getIntProperty("timeout", 5000);//5 seconds
+            int receiveTimeout = configuration.getIntProperty("timeout", configuration.getIntProperty("timeout", 5000));//5 seconds
             int retries = configuration.getIntProperty("retries", 1);
             master.setTimeout(receiveTimeout);
             master.setRetries(retries);
@@ -98,7 +97,8 @@ public class ModbusMasterGateway {
         params.setDataBits(databits);
         params.setParity(parity);
         params.setStopBits(stopbits);
-        master = factory.createRtuMaster(params, SerialMaster.SYNC_FUNCTION);
+        
+        master = factory.createRtuMaster(params);
         connectionInfo = "Serial Connection to: " + port;
     }
 
@@ -111,6 +111,7 @@ public class ModbusMasterGateway {
         System.out.println("tcpport: " + tcpport);
         params.setHost(host);
         params.setPort(tcpport);
+        params.setEncapsulated(configuration.getBooleanProperty("isRTUoverTCP", false));
         master = factory.createTcpMaster(params, true);
         connectionInfo = "TCP Connection to: " + host + ":" + tcpport;
     }

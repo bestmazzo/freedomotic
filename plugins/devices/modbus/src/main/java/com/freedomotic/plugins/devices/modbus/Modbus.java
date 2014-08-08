@@ -46,9 +46,9 @@ public class Modbus extends Protocol {
 
     private static final Logger LOG = Logger.getLogger(Modbus.class.getName());
     private int numRegisters;
-    private BatchRead<String> batchRead = new BatchRead<String>();
+    private final BatchRead<String> batchRead = new BatchRead<String>();
     private BatchResults<String> results;
-    private List<FreedomModbusLocator> points = new ArrayList<FreedomModbusLocator>();
+    private final List<FreedomModbusLocator> points = new ArrayList<FreedomModbusLocator>();
     private int pollingTime;
     private ModbusMaster master;
 
@@ -94,13 +94,7 @@ public class Modbus extends Protocol {
                 master.init();
                 results = master.send(batchRead);
                 sendEvents();
-            } catch (ModbusTransportException ex) {
-                Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
-                die(ex.getLocalizedMessage());
-            } catch (ErrorResponseException ex) {
-                Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
-                die(ex.getLocalizedMessage());
-            } catch (ModbusInitException ex) {
+            } catch (ModbusTransportException | ErrorResponseException | ModbusInitException ex) {
                 Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
                 die(ex.getLocalizedMessage());
             }
