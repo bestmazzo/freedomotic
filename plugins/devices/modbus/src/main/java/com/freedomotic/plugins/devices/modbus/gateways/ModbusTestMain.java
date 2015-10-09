@@ -29,7 +29,7 @@ import com.serotonin.modbus4j.exception.ErrorResponseException;
 import com.serotonin.modbus4j.exception.ModbusInitException;
 import com.serotonin.modbus4j.exception.ModbusTransportException;
 import com.serotonin.modbus4j.locator.NumericLocator;
-import gnu.io.SerialPort;
+//import gnu.io.SerialPort;
 import com.freedomotic.model.ds.Config;
 
 /**
@@ -38,7 +38,13 @@ import com.freedomotic.model.ds.Config;
  */
 
 public class ModbusTestMain {
-
+    
+    private static String PORT_NAME = "/dev/ttyUSB10";
+    private static int PORT_BAUDRATE = 19200;
+    private static int PORT_DATABITS = 8;
+    private static int PORT_PARITY = 2;//even
+    private static int PORT_STOPBITS = 1; 
+    
     /**
      * @param args
      * @throws Exception
@@ -51,11 +57,11 @@ public class ModbusTestMain {
         config.setProperty("ModbusProtocol", "TCP");
 
         //Serial test
-        config.setProperty("port", "/dev/ttyUSB0");
-        config.setProperty("baudrate", String.valueOf(19200));
-        config.setProperty("data-bits", String.valueOf(SerialPort.DATABITS_8));
-        config.setProperty("parity", String.valueOf(SerialPort.PARITY_EVEN));
-        config.setProperty("stop-bits", String.valueOf(SerialPort.STOPBITS_1));
+        config.setProperty("port", PORT_NAME);
+        config.setProperty("baudrate", String.valueOf(PORT_BAUDRATE));
+        config.setProperty("data-bits", String.valueOf(PORT_DATABITS));
+        config.setProperty("parity", String.valueOf(PORT_PARITY));
+        config.setProperty("stop-bits", String.valueOf(PORT_STOPBITS));
 
         //TCP Test
         config.setProperty("host", "192.168.1.9");

@@ -53,7 +53,7 @@ public class Modbus extends Protocol {
     private ModbusMaster master;
 
     public Modbus() {
-        super("Modbus", "/modbus/modbus.xml");
+        super("Modbus", "/modbus/modbus-manifest.xml");
     }
 
     /*
@@ -61,7 +61,6 @@ public class Modbus extends Protocol {
      */
     @Override
     public void onStart() {
-        super.onStart();
 
         batchRead.setContiguousRequests(true);
         //ModBus General Configuration
@@ -81,7 +80,6 @@ public class Modbus extends Protocol {
 
     @Override
     public void onStop() {
-        super.onStop();
         master.destroy();
         this.setDescription("Disconnected");
         setPollingWait(-1); // disable polling
@@ -95,25 +93,25 @@ public class Modbus extends Protocol {
                 results = master.send(batchRead);
                 sendEvents();
             } catch (ModbusTransportException ex) {
-                Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, ex.getLocalizedMessage());
                 die(ex.getLocalizedMessage());
             } catch (ErrorResponseException ex) {
-                Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, ex.getLocalizedMessage());
                 die(ex.getLocalizedMessage());
             } catch (ModbusInitException ex) {
-                Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, ex.getLocalizedMessage());
                 die(ex.getLocalizedMessage());
             }
             Thread.sleep(pollingTime);
         } catch (InterruptedException ex) {
-            Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, ex.getLocalizedMessage());
         }
     }
 
     private void die(String message) {
         master.destroy();
         //we can use the plugin description to provide usefull information
-        this.setDescription("Plugin stoped: " + message);
+        this.setDescription("Plugin stopped: " + message);
         stop(); //stops the plugin on errors
     }
 
@@ -130,7 +128,7 @@ public class Modbus extends Protocol {
             ProtocolRead protocolEvent = new ProtocolRead(this, "Modbus", point.getName());
             point.fillProtocolEvent(results, protocolEvent);
             LOG.info("Sending Modbus protocol read event for eventName name: " + point.getName() + " value: " + protocolEvent.getProperty("behaviorValue"));
-            Freedomotic.sendEvent(protocolEvent);
+            this.notifyEvent(protocolEvent);
         }
     }
 
@@ -147,11 +145,11 @@ public class Modbus extends Protocol {
 
             //TODO: manage the exceptions        
         } catch (ModbusTransportException ex) {
-            Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, ex.getLocalizedMessage());
         } catch (ErrorResponseException ex) {
-            Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, ex.getLocalizedMessage());
         } catch (ModbusInitException ex) {
-            Logger.getLogger(Modbus.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, ex.getLocalizedMessage());
         } finally {
             master.destroy();
         }
