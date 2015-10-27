@@ -15,6 +15,8 @@ public class SerialPortWrapperImpl implements SerialPortWrapper {
     private int parity;
     private int flowControlIn;
     private int flowControlOut;
+    private InputStream inputStream;
+    private OutputStream outputStream;
 
     public SerialPortWrapperImpl(String commPortId, int baudRate, int dataBits, int stopBits, int parity, int flowControlIn,
             int flowControlOut) {
@@ -27,6 +29,8 @@ public class SerialPortWrapperImpl implements SerialPortWrapper {
         this.flowControlOut = flowControlOut;
         
         serialPort = new SerialPort(this.commPortId);
+        inputStream = new SerialInputStream(serialPort);
+        outputStream = new BufferedOutputStream(new SerialOutputStream(serialPort));
 
     }
 
