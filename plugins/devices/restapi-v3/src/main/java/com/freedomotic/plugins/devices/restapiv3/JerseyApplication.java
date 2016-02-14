@@ -21,6 +21,9 @@ package com.freedomotic.plugins.devices.restapiv3;
 
 import static com.freedomotic.plugins.devices.restapiv3.RestAPIv3.JERSEY_RESOURCE_PKG;
 import static com.freedomotic.plugins.devices.restapiv3.RestAPIv3.ATMOSPHRE_RESOURCE_PKG;
+import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.jaxrs.listing.ApiListingResource;
+import io.swagger.jaxrs.listing.SwaggerSerializers;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -29,9 +32,19 @@ import org.glassfish.jersey.server.ResourceConfig;
  * @author matteo
  */
 public class JerseyApplication extends ResourceConfig {
-    
-    public JerseyApplication(){
+
+    public JerseyApplication() {
+        
         packages(JERSEY_RESOURCE_PKG, ATMOSPHRE_RESOURCE_PKG)
-        .register(JacksonFeature.class);
+                .register(ApiListingResource.class)
+                .register(SwaggerSerializers.class)
+                .register(JacksonFeature.class);
+        BeanConfig beanConfig = new BeanConfig();
+        beanConfig.setVersion("1.0.2");
+        beanConfig.setSchemes(new String[]{"http"});
+        beanConfig.setHost("localhost:9111");
+        beanConfig.setBasePath("/");
+        beanConfig.setResourcePackage(JERSEY_RESOURCE_PKG);
+        beanConfig.setScan(true);
     }
 }

@@ -30,6 +30,7 @@ import com.freedomotic.plugins.devices.restapiv3.resources.atmosphere.Atmosphere
 import com.freedomotic.plugins.devices.restapiv3.resources.atmosphere.AtmospherePluginChangeResource;
 import com.freedomotic.plugins.devices.restapiv3.resources.atmosphere.AtmosphereZoneChangeResource;
 import com.freedomotic.reactions.Command;
+import com.google.inject.Injector;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,18 +47,16 @@ public class RestAPIv3 extends Protocol {
 
     public static URI BASE_URI;
     public static final String API_VERSION = "v3";
-
-    @Inject
-    private RestJettyServer jServer;
-    @Inject
-    private AtmosphereObjectChangeResource atmosphereObjectChangeResource;
-    @Inject
-    private AtmosphereZoneChangeResource atmosphereZoneChangeResource;
-    @Inject
-    private AtmospherePluginChangeResource atmospherePluginChangeResource;
-    @Inject 
-    private AtmosphereMessageCalloutResource atmosphereMessageCalloutResource;
     
+    @Inject
+    private Injector baseInjector;
+    
+    private Injector subInjector;
+    private AtmosphereObjectChangeResource atmosphereObjectChangeResource;
+    private AtmosphereZoneChangeResource atmosphereZoneChangeResource;
+    private AtmospherePluginChangeResource atmospherePluginChangeResource;
+    private AtmosphereMessageCalloutResource atmosphereMessageCalloutResource;
+    private RestJettyServer jServer;
     // Hold a preconfigurd static web security manager which can be used by Shiro
     public static DefaultWebSecurityManager defaultWebSecurityManager;
 
@@ -82,7 +81,13 @@ public class RestAPIv3 extends Protocol {
         BASE_URI = UriBuilder.fromUri(protocol + "://" + configuration.getStringProperty("listen-address", "localhost") + "/").path(API_VERSION).port(port).build();
 
         LOG.log(Level.INFO, "RestAPI v3 plugin is started at {0}", BASE_URI);
-
+        subInjector=baseInjector.createChildInjector(new JerseyInjector());
+        this.atmosphereZoneChangeResource=this.subInjector.getInstance(AtmosphereZoneChangeResource.class);
+        this.atmospherePluginChangeResource=this.subInjector.getInstance(AtmospherePluginChangeResource.class);
+        this.atmosphereObjectChangeResource=this.subInjector.getInstance(AtmosphereObjectChangeResource.class);
+        this.atmosphereMessageCalloutResource=this.subInjector.getInstance(AtmosphereMessageCalloutResource.class);
+        this.jServer=this.subInjector.getInstance(RestJettyServer.class);
+        
         try {
             jServer.setMaster(this);
             jServer.startServer();

@@ -23,10 +23,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.freedomotic.api.EventTemplate;
 import com.freedomotic.plugins.devices.restapiv3.RestAPIv3;
 import com.freedomotic.things.EnvObjectLogic;
-import com.wordnik.swagger.annotations.Api;
+import io.swagger.annotations.Api;
 import java.util.logging.Logger;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import org.atmosphere.config.service.AtmosphereService;
+import org.atmosphere.cpr.ApplicationConfig;
+import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.atmosphere.interceptor.AtmosphereResourceLifecycleInterceptor;
 
@@ -46,6 +51,21 @@ public class AtmosphereObjectChangeResource extends AbstractWSResource {
     private static final Logger LOG = Logger.getLogger(AtmosphereObjectChangeResource.class.getName());
 
     public final static String PATH = "objectchange";
+    private final BroadcasterFactory factory;
+
+    @Context
+    private HttpServletRequest request;
+
+    @Inject
+    public AtmosphereObjectChangeResource(BroadcasterFactory factory) {
+        this.factory = factory;
+        if (request!=null) {
+            AtmosphereResource r = (AtmosphereResource) request.getAttribute(ApplicationConfig.ATMOSPHERE_RESOURCE);
+            r.addBroadcaster(
+                    factory.lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereObjectChangeResource.PATH, true)
+            );
+        }
+    }
 
     @Override
     public void broadcast(EventTemplate message) {
@@ -58,9 +78,8 @@ public class AtmosphereObjectChangeResource extends AbstractWSResource {
                 } else {
                     msg = om.writeValueAsString(t.getPojo());
                 }
-                BroadcasterFactory
-                        .getDefault()
-                        .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereObjectChangeResource.PATH)
+                factory
+                        .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereObjectChangeResource.PATH, true)
                         .broadcast(msg);
             } catch (JsonProcessingException ex) {
                 LOG.warning(ex.getLocalizedMessage());

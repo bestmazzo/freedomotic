@@ -80,7 +80,7 @@ public class ConfigPersistence {
             Config c = null;
             xstream.alias("config", Config.class);
             c = (Config) xstream.fromXML(xml.toString());
-            c.setXmlFile(file);
+            c.setXmlFile(file.getName());
 
             return c;
         } catch (FileNotFoundException ex) {

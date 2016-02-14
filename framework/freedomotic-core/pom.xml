@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.restlet.version>2.1.7</org.restlet.version>
         <xstream.version>1.4.8</xstream.version>
+        <jetty.version>9.3.6.v20151106</jetty.version>
     </properties>
     <build>
         <finalName>freedomotic</finalName> 
@@ -70,7 +71,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.3.6.v20151106</version>
+            <version>${jetty.version}</version>
         </dependency>
 
         <!-- XML serialization library -->
