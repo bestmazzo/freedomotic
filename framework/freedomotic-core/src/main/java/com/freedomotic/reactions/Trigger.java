@@ -134,7 +134,7 @@ public final class Trigger implements BusConsumer, Cloneable {
      *
      * @param event
      */
-    public void setChannel(EventTemplate event) {
+    public void setChannelByEvent(EventTemplate event) {
         this.channel = event.getDefaultDestination();
     }
 

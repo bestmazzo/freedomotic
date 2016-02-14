@@ -29,13 +29,17 @@ import com.freedomotic.plugins.devices.restapiv3.auth.ShiroListener;
 import com.freedomotic.plugins.devices.restapiv3.filters.GuiceServletConfig;
 import com.freedomotic.settings.Info;
 import com.google.inject.servlet.GuiceFilter;
+import io.swagger.jersey.config.JerseyJaxrsConfig;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.apache.shiro.web.servlet.ShiroFilter;
+import org.atmosphere.container.Jetty9AsyncSupportWithWebSocket;
 import org.atmosphere.cpr.AtmosphereServlet;
+import org.atmosphere.interceptor.ShiroInterceptor;
+import org.atmosphere.jersey.JerseyBroadcaster;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -52,7 +56,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.glassfish.jersey.servlet.ServletContainer;
-
 public final class RestJettyServer extends Server {
 
     private static final Logger LOG = Logger.getLogger(RestJettyServer.class.getName());
@@ -70,12 +73,6 @@ public final class RestJettyServer extends Server {
         webServer = new Server();
         LOG.info("Starting RestAPI Server...");
 
-        /**
-         * TODO WHEN MOVING TO JETTY 9 refactor connectors code and add spdy
-         * support
-         * http://download.eclipse.org/jetty/stable-9/xref/org/eclipse/jetty/embedded/SpdyConnector.html
-         *
-         */
         HttpConfiguration http_config = new HttpConfiguration();
         if (!master.configuration.getBooleanProperty("enable-ssl", false)) {
             ServerConnector http = new ServerConnector(webServer,
@@ -110,10 +107,11 @@ public final class RestJettyServer extends Server {
 
         // atmpsphere servlet 
         ServletHolder atmosphereServletHolder = new ServletHolder(AtmosphereServlet.class);
-        atmosphereServletHolder.setInitParameter("jersey.config.server.provider.packages", RestAPIv3.ATMOSPHRE_RESOURCE_PKG);
+        atmosphereServletHolder.setInitParameter("jersey.config.server.provider.packages",RestAPIv3.ATMOSPHRE_RESOURCE_PKG);
         atmosphereServletHolder.setInitParameter("org.atmosphere.websocket.messageContentType", "application/json");
-        atmosphereServletHolder.setInitParameter("org.atmosphere.cpr.AtmosphereInterceptor", "org.atmosphere.interceptor.ShiroInterceptor");
-//        atmosphereServletHolder.setInitParameter("org.atmosphere.cpr.broadcasterClass", "org.atmosphere.jersey.JerseyBroadcaster");
+        atmosphereServletHolder.setInitParameter("org.atmosphere.cpr.AtmosphereInterceptor", "org.atmosphere.interceptor.ShiroInterceptor"); //ShiroInterceptor.class.getCanonicalName());
+        atmosphereServletHolder.setInitParameter("org.atmosphere.cpr.broadcasterClass", JerseyBroadcaster.class.getCanonicalName());
+        atmosphereServletHolder.setInitParameter("org.atmosphere.cpr.asyncSupport", Jetty9AsyncSupportWithWebSocket.class.getCanonicalName());
         atmosphereServletHolder.setAsyncSupported(true);
         atmosphereServletHolder.setInitParameter("org.atmosphere.useWebSocket", "true");
         atmosphereServletHolder.setInitOrder(2);
@@ -125,7 +123,7 @@ public final class RestJettyServer extends Server {
         jerseyServletHolder.setInitParameter("jersey.config.server.wadl.disableWadl", "true");
         jerseyServletHolder.setInitOrder(1);
         context.addServlet(jerseyServletHolder, "/" + API_VERSION + "/*");
-
+        
         // cors filter
         if (master.configuration.getBooleanProperty("enable-cors", false)) {
             FilterHolder corsFilterHolder = new FilterHolder(CrossOriginFilter.class);
@@ -151,8 +149,13 @@ public final class RestJettyServer extends Server {
 
         //static files handler        
         String staticDir = master.configuration.getStringProperty("serve-static", "swagger");
-        context.setResourceBase(new File(master.getFile().getParent() + "/data/" + staticDir + "/").getAbsolutePath());
-        context.addServlet(DefaultServlet.class, "/*");
+        String baseDir = new File(master.getFile().getParent() + "/data/" + staticDir + "/").getAbsolutePath();
+        ServletHolder baseHolder = new ServletHolder("base-dir", DefaultServlet.class);
+        baseHolder.setInitParameter("resourceBase", baseDir);
+        baseHolder.setInitParameter("dirAllowed", "true");
+        baseHolder.setInitParameter("pathInfoOnly", "true");
+        context.setResourceBase(baseDir);
+        context.addServlet(baseHolder, "/*");
 
         // serve resource files (images and so on)
         ServletHolder resHolder = new ServletHolder("static-home", DefaultServlet.class);

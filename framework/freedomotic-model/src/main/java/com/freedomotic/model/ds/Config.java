@@ -60,15 +60,6 @@ public class Config
 
     /**
      *
-     * @param file
-     */
-    @XmlTransient
-    public void setXmlFile(File file) {
-        this.xmlFile = file.getName();
-    }
-
-    /**
-     *
      * @param name
      */
     public void setXmlFile(String name) {

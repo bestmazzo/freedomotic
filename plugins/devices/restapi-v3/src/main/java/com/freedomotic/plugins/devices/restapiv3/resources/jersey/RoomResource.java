@@ -24,7 +24,7 @@ import com.freedomotic.environment.Room;
 import com.freedomotic.environment.ZoneLogic;
 import com.freedomotic.model.environment.Zone;
 import com.freedomotic.plugins.devices.restapiv3.utils.AbstractResource;
-import com.wordnik.swagger.annotations.*;
+import io.swagger.annotations.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -41,8 +41,12 @@ import javax.ws.rs.core.Response;
 @Api(value = "/rooms", description = "Operations on rooms", position = 1)
 public class RoomResource extends AbstractResource<Zone> {
 
-    final private String envUUID;
-    final private EnvironmentLogic env;
+    private String envUUID = null;
+    private EnvironmentLogic env = null;
+
+    public RoomResource() {
+        authContext = "rooms";
+    }
 
     protected RoomResource(String envUUID) {
         this.envUUID = envUUID;
@@ -88,7 +92,7 @@ public class RoomResource extends AbstractResource<Zone> {
         return super.delete(UUID);
     }
 
-     /**
+    /**
      *
      * @param UUID
      * @param s
@@ -108,8 +112,7 @@ public class RoomResource extends AbstractResource<Zone> {
             @PathParam("id") String UUID, Zone s) {
         return super.update(UUID, s);
     }
-    
-    
+
     /**
      *
      * @param s
@@ -127,7 +130,7 @@ public class RoomResource extends AbstractResource<Zone> {
     public Response create(Zone s) throws URISyntaxException {
         return super.create(s);
     }
-    
+
     @Override
     protected boolean doDelete(String ID) {
         try {

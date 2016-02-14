@@ -23,9 +23,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.freedomotic.api.EventTemplate;
 import com.freedomotic.plugins.devices.restapiv3.RestAPIv3;
 import com.freedomotic.plugins.devices.restapiv3.representations.MessageCalloutRepresentation;
-import com.wordnik.swagger.annotations.Api;
+import io.swagger.annotations.Api;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import org.atmosphere.config.service.AtmosphereService;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.atmosphere.interceptor.AtmosphereResourceLifecycleInterceptor;
@@ -46,16 +48,22 @@ public class AtmosphereMessageCalloutResource extends AbstractWSResource {
     private static final Logger LOG = Logger.getLogger(AtmosphereMessageCalloutResource.class.getName());
 
     public final static String PATH = "messagecallout";
-
+    private final BroadcasterFactory factory;
+    
+    @Inject
+    public AtmosphereMessageCalloutResource(BroadcasterFactory factory){
+        super();
+        this.factory=factory;
+    }
+    
     @Override
     public void broadcast(EventTemplate message) {
         if (api != null) {
             String msg;
             try {
                 msg = om.writeValueAsString(new MessageCalloutRepresentation(message.getProperty("message.text")));
-                BroadcasterFactory
-                        .getDefault()
-                        .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereMessageCalloutResource.PATH)
+                factory
+                        .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereMessageCalloutResource.PATH,true)
                         .broadcast(msg);
             } catch (JsonProcessingException ex) {
             }
