@@ -20,11 +20,16 @@ import com.freedomotic.security.User;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.swagger.annotations.Api;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.atmosphere.annotation.Suspend;
 import org.atmosphere.config.service.AtmosphereService;
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereResource;
@@ -37,7 +42,7 @@ import org.atmosphere.interceptor.ShiroInterceptor;
  * @author matteo
  */
 @Path(AtmospherePermissionCheckResource.PATH)
-@Api(value = "ws_permissionCheck", description = "WS for checking current user permissions", position = 10)
+@Api(value = "ws_permissionCheck")
 @AtmosphereService(
         dispatch = false,
         interceptors = {AtmosphereResourceLifecycleInterceptor.class, ShiroInterceptor.class},
@@ -62,13 +67,23 @@ public class AtmospherePermissionCheckResource {
     @Context
     private HttpServletRequest request;
 
+    @GET
+    @Suspend()
+    public String get(@Context AtmosphereResource res) {
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        res.getRequest().setAttribute("FD_USER", username);
+        String id = res.uuid();
+        //TODO: save user and uuid
+        return "";
+    }
+
     @POST
     public void query(String permission) {
         if (api != null) {
             AtmosphereResource r = (AtmosphereResource) request.getAttribute(ApplicationConfig.ATMOSPHERE_RESOURCE);
             if (r != null) {
-                Subject sub = (Subject) r.getRequest().getAttribute(FrameworkConfig.SECURITY_SUBJECT);
-                User u = api.getAuth().getUser(sub.getPrincipal().toString());
+                String username = r.getRequest().getUserPrincipal().toString();
+                User u = api.getAuth().getUser(username);
                 Boolean permOK = u.isPermitted(permission);
                 PermissionCheckRepresentation p = new PermissionCheckRepresentation(u.getName(), permission, permOK);
                 try {
