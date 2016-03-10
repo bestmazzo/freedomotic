@@ -27,8 +27,6 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
 import com.freedomotic.api.API;
 import com.google.inject.Inject;
-import javax.ws.rs.core.Context;
-import org.atmosphere.cpr.BroadcasterFactory;
 
 /**
  *
@@ -41,7 +39,7 @@ public abstract class AbstractWSResource implements WebSocketEndpoint {
 
     
     protected ObjectMapper om;
-
+    
     public AbstractWSResource() {
         //api = Freedomotic.INJECTOR.getInstance(API.class);
         om = new ObjectMapper();

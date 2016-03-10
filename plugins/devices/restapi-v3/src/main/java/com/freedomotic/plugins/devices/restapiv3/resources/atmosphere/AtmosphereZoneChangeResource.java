@@ -25,12 +25,11 @@ import com.freedomotic.environment.EnvironmentLogic;
 import com.freedomotic.environment.ZoneLogic;
 import com.freedomotic.plugins.devices.restapiv3.RestAPIv3;
 import io.swagger.annotations.Api;
-import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import org.atmosphere.client.TrackMessageSizeInterceptor;
 import org.atmosphere.config.service.AtmosphereService;
-import org.atmosphere.cpr.BroadcasterFactory;
+import org.atmosphere.cpr.Universe;
 import org.atmosphere.interceptor.AtmosphereResourceLifecycleInterceptor;
 
 /**
@@ -47,12 +46,6 @@ import org.atmosphere.interceptor.AtmosphereResourceLifecycleInterceptor;
 public class AtmosphereZoneChangeResource extends AbstractWSResource {
 
     public final static String PATH = "zonechange";
-    private final BroadcasterFactory factory;
-
-    @Inject
-    public AtmosphereZoneChangeResource(BroadcasterFactory factory) {
-        this.factory = factory;
-    }
 
     @POST
     @Override
@@ -62,8 +55,8 @@ public class AtmosphereZoneChangeResource extends AbstractWSResource {
                 ZoneLogic z = e.getZone(message.getPayload().getStatementValue("zone.name"));
                 if (z != null) {
                     try {
-                        factory
-                                .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereZoneChangeResource.PATH, true)
+                        Universe.broadcasterFactory()
+                                .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereZoneChangeResource.PATH,true)
                                 .broadcast(
                                         om.writeValueAsString(z));
                     } catch (JsonProcessingException ex) {

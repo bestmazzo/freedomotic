@@ -96,7 +96,7 @@ public final class RestJettyServer extends Server {
                     new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
                     new HttpConnectionFactory(https_config));
 
-            https.setIdleTimeout(500000);
+            //https.setIdleTimeout(500000);
             https.setPort(master.configuration.getIntProperty("https-port", 9113));
             webServer.addConnector(https);
 
