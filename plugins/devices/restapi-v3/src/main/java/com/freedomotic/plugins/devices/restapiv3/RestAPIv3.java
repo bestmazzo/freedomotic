@@ -81,12 +81,11 @@ public class RestAPIv3 extends Protocol {
         BASE_URI = UriBuilder.fromUri(protocol + "://" + configuration.getStringProperty("listen-address", "localhost") + "/").path(API_VERSION).port(port).build();
 
         LOG.log(Level.INFO, "RestAPI v3 plugin is started at {0}", BASE_URI);
-        subInjector=baseInjector.createChildInjector(new JerseyInjector());
-        this.atmosphereZoneChangeResource=this.subInjector.getInstance(AtmosphereZoneChangeResource.class);
-        this.atmospherePluginChangeResource=this.subInjector.getInstance(AtmospherePluginChangeResource.class);
-        this.atmosphereObjectChangeResource=this.subInjector.getInstance(AtmosphereObjectChangeResource.class);
-        this.atmosphereMessageCalloutResource=this.subInjector.getInstance(AtmosphereMessageCalloutResource.class);
-        this.jServer=this.subInjector.getInstance(RestJettyServer.class);
+        this.atmosphereZoneChangeResource=this.baseInjector.getInstance(AtmosphereZoneChangeResource.class);
+        this.atmospherePluginChangeResource=this.baseInjector.getInstance(AtmospherePluginChangeResource.class);
+        this.atmosphereObjectChangeResource=this.baseInjector.getInstance(AtmosphereObjectChangeResource.class);
+        this.atmosphereMessageCalloutResource=this.baseInjector.getInstance(AtmosphereMessageCalloutResource.class);
+        this.jServer=this.baseInjector.getInstance(RestJettyServer.class);
         
         try {
             jServer.setMaster(this);

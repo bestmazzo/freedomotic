@@ -25,12 +25,11 @@ import com.freedomotic.api.EventTemplate;
 import com.freedomotic.api.Plugin;
 import com.freedomotic.plugins.devices.restapiv3.RestAPIv3;
 import io.swagger.annotations.Api;
-import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import org.atmosphere.client.TrackMessageSizeInterceptor;
 import org.atmosphere.config.service.AtmosphereService;
-import org.atmosphere.cpr.BroadcasterFactory;
+import org.atmosphere.cpr.Universe;
 import org.atmosphere.interceptor.AtmosphereResourceLifecycleInterceptor;
 
 /**
@@ -47,12 +46,6 @@ import org.atmosphere.interceptor.AtmosphereResourceLifecycleInterceptor;
 public class AtmospherePluginChangeResource extends AbstractWSResource {
 
     public final static String PATH = "pluginchange";
-    private final BroadcasterFactory factory;
-
-    @Inject
-    public AtmospherePluginChangeResource(BroadcasterFactory factory) {
-        this.factory = factory;
-    }
 
     @POST
     @Override
@@ -62,7 +55,7 @@ public class AtmospherePluginChangeResource extends AbstractWSResource {
                 Plugin p = (Plugin) c;
                 if (p.getName().equalsIgnoreCase(message.getPayload().getStatementValue("plugin"))) {
                     try {
-                        factory
+                        Universe.broadcasterFactory()
                                 .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmospherePluginChangeResource.PATH, true)
                                 .broadcast(om.writeValueAsString(p));
                     } catch (JsonProcessingException ex) {

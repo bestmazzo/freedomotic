@@ -27,12 +27,18 @@ import io.swagger.annotations.Api;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import org.atmosphere.annotation.Suspend;
+import org.atmosphere.client.TrackMessageSizeInterceptor;
 import org.atmosphere.config.service.AtmosphereService;
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.AtmosphereResourceEvent;
+import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
 import org.atmosphere.cpr.BroadcasterFactory;
+import org.atmosphere.cpr.Universe;
 import org.atmosphere.interceptor.AtmosphereResourceLifecycleInterceptor;
 
 /**
@@ -43,7 +49,7 @@ import org.atmosphere.interceptor.AtmosphereResourceLifecycleInterceptor;
 @Api(value = "ws_objectChange", description = "WS for object change events", position = 10)
 @AtmosphereService(
         dispatch = false,
-        interceptors = {AtmosphereResourceLifecycleInterceptor.class},
+        interceptors = {AtmosphereResourceLifecycleInterceptor.class,TrackMessageSizeInterceptor.class},
         path = "/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereObjectChangeResource.PATH,
         servlet = "org.glassfish.jersey.servlet.ServletContainer")
 public class AtmosphereObjectChangeResource extends AbstractWSResource {
@@ -51,21 +57,7 @@ public class AtmosphereObjectChangeResource extends AbstractWSResource {
     private static final Logger LOG = Logger.getLogger(AtmosphereObjectChangeResource.class.getName());
 
     public final static String PATH = "objectchange";
-    private final BroadcasterFactory factory;
 
-    @Context
-    private HttpServletRequest request;
-
-    @Inject
-    public AtmosphereObjectChangeResource(BroadcasterFactory factory) {
-        this.factory = factory;
-        if (request!=null) {
-            AtmosphereResource r = (AtmosphereResource) request.getAttribute(ApplicationConfig.ATMOSPHERE_RESOURCE);
-            r.addBroadcaster(
-                    factory.lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereObjectChangeResource.PATH, true)
-            );
-        }
-    }
 
     @Override
     public void broadcast(EventTemplate message) {
@@ -78,8 +70,8 @@ public class AtmosphereObjectChangeResource extends AbstractWSResource {
                 } else {
                     msg = om.writeValueAsString(t.getPojo());
                 }
-                factory
-                        .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereObjectChangeResource.PATH, true)
+                Universe.broadcasterFactory()
+                        .lookup("/" + RestAPIv3.API_VERSION + "/ws/" + AtmosphereObjectChangeResource.PATH,true)
                         .broadcast(msg);
             } catch (JsonProcessingException ex) {
                 LOG.warning(ex.getLocalizedMessage());
