@@ -1,11 +1,6 @@
 /**
  *
-<<<<<<< HEAD
- * Copyright (c) 2009-2016 Freedomotic team
- * http://freedomotic.com
-=======
- * Copyright (c) 2009-2015 Freedomotic team http://freedomotic.com
->>>>>>> 9605d1f114273eedbdf277bb6c0494da85740453
+ * Copyright (c) 2009-2016 Freedomotic team http://freedomotic.com
  *
  * This file is part of Freedomotic
  *
@@ -35,7 +30,7 @@ import com.freedomotic.model.ds.Config;
 
 /**
  *
- * @author gpt
+ * @author Gabriel Pulido de Torres
  */
 public class ModbusMasterGateway {
 
@@ -49,23 +44,35 @@ public class ModbusMasterGateway {
     private static int PORT_STOPBITS = 1;
     private static int PORT_FLOW_CONTROL_IN = 1; // to check
     private static int PORT_FLOW_CONTROL_OUT = 1; // to check
-    
+
 //        //private static boolean echo = false;
 //        private static int receiveTimeout = 10000;//10 seconds
 //        private static int retries = 1;
 
-    public ModbusMasterGateway() {
+    /**
+     *
+     */
+        public ModbusMasterGateway() {
     }
 
+    /**
+     *
+     * @return
+     */
     public static ModbusMaster getInstance() {
         return getInstance(new Config());
     }
 
+    /**
+     *
+     * @param configuration
+     * @return
+     */
     public static ModbusMaster getInstance(Config configuration) {
         if (master != null) {
             return master;
         } else {
-            String modbusProtocol = configuration.getStringProperty("modbusProtocol", "TCP");
+            String modbusProtocol = configuration.getStringProperty("modbus-protocol", "TCP");
             if (modbusProtocol == "TCP") {
                 configureTCP(configuration);
             } else {
@@ -81,6 +88,10 @@ public class ModbusMasterGateway {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public static String ConnectionInfo() {
         return connectionInfo;
 
@@ -118,7 +129,7 @@ public class ModbusMasterGateway {
         IpParameters params = new IpParameters();
         String host = configuration.getStringProperty("host", "localhost");
         System.out.println("host: " + host);
-        int tcpport = configuration.getIntProperty("tcpport", 502);
+        int tcpport = configuration.getIntProperty("tcp-port", 502);
         System.out.println("tcpport: " + tcpport);
         params.setHost(host);
         params.setPort(tcpport);

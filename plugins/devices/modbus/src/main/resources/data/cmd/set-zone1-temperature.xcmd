@@ -19,7 +19,7 @@
           <property name="Additive" value="0"/>
           <property name="value" value="26"/>
         </tuple>
-       </tuples>
+      </tuples>
     </properties>
   </properties>
 </command>

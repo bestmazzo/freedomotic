@@ -1,13 +1,21 @@
 package com.freedomotic.plugins.devices.modbus.gateways;
 
-import jssc.*;
 import com.serotonin.modbus4j.serial.SerialPortWrapper;
+import jssc.SerialPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * 
+ */
 public class SerialPortWrapperImpl implements SerialPortWrapper {
-
-    private SerialPort serialPort;
+    private static final Logger LOG = LoggerFactory.getLogger(SerialPortWrapperImpl.class);
+    private SerialPort port;
     private String commPortId;
     private int baudRate;
     private int dataBits;
@@ -15,8 +23,6 @@ public class SerialPortWrapperImpl implements SerialPortWrapper {
     private int parity;
     private int flowControlIn;
     private int flowControlOut;
-    private InputStream inputStream;
-    private OutputStream outputStream;
 
     public SerialPortWrapperImpl(String commPortId, int baudRate, int dataBits, int stopBits, int parity, int flowControlIn,
             int flowControlOut) {
@@ -28,90 +34,71 @@ public class SerialPortWrapperImpl implements SerialPortWrapper {
         this.flowControlIn = flowControlIn;
         this.flowControlOut = flowControlOut;
         
-        serialPort = new SerialPort(this.commPortId);
-        inputStream = new SerialInputStream(serialPort);
-        outputStream = new BufferedOutputStream(new SerialOutputStream(serialPort));
+        port = new SerialPort(this.commPortId);
 
     }
 
+
     @Override
     public void close() throws Exception {
-        try {
-            serialPort.closePort();
-        } catch (SerialPortException ex) {
-            //LOG.log(Level.WARNING, "Error while closing serial port " + serialPort.getPortName(), ex);
-                    }
+        port.closePort();
+        //listeners.forEach(PortConnectionListener::closed);
+        LOG.debug("Serial port {} closed", port.getPortName());
     }
 
     @Override
     public void open() throws Exception {
-        boolean isOpen = serialPort.openPort();
+        port.openPort();
+        port.setParams(this.getBaudRate(), this.getDataBits(), this.getStopBits(), this.getParity());
+        port.setFlowControlMode(this.getFlowControlIn() | this.getFlowControlOut());
+
+        //listeners.forEach(PortConnectionListener::opened);
+        LOG.debug("Serial port {} open", port.getPortName());
     }
 
     @Override
     public InputStream getInputStream() {
-        // TODO Auto-generated method stub
-        return null;
+        return new SerialInputStream(port);
     }
 
     @Override
     public OutputStream getOutputStream() {
-        // TODO Auto-generated method stub
-        return null;
+        return new SerialOutputStream(port);
     }
 
     @Override
     public int getBaudRate() {
-        // TODO Auto-generated method stub
-        return 0;
+        return baudRate;
+        //return SerialPort.BAUDRATE_9600;
+    }
+
+    @Override
+    public int getFlowControlIn() {
+        return flowControlIn;
+        //return SerialPort.FLOWCONTROL_NONE;
+    }
+
+    @Override
+    public int getFlowControlOut() {
+        return flowControlOut;
+        //return SerialPort.FLOWCONTROL_NONE;
+    }
+
+    @Override
+    public int getDataBits() {
+        return dataBits;
+        //return SerialPort.DATABITS_8;
     }
 
     @Override
     public int getStopBits() {
-        // TODO Auto-generated method stub
-        return 0;
+        return stopBits;
+        //return SerialPort.STOPBITS_1;
     }
 
-    /*
-     * (non-Javadoc) @see
-     * com.serotonin.modbus4j.serial.SerialPortWrapper#getParity()
-     */
     @Override
     public int getParity() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-
-    /*
-     * (non-Javadoc) @see
-     * com.serotonin.modbus4j.serial.SerialPortWrapper#getFlowControlIn()
-     */
-    @Override
-    public int getFlowControlIn() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-
-    /*
-     * (non-Javadoc) @see
-     * com.serotonin.modbus4j.serial.SerialPortWrapper#getFlowControlOut()
-     */
-    @Override
-    public int getFlowControlOut() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-
-    /*
-     * (non-Javadoc) @see
-     * com.serotonin.modbus4j.serial.SerialPortWrapper#getDataBits()
-     */
-    @Override
-    public int getDataBits() {
-        // TODO Auto-generated method stub
-        return 0;
+        return parity;
+        //return SerialPort.PARITY_NONE;
     }
 }

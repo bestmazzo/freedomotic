@@ -41,7 +41,7 @@ import com.freedomotic.model.ds.Config;
  * @author gpt
  */
 
-class FreedomModbusLocator {
+class FreedomoticModbusLocator {
 
     private BaseLocator modbusLocator;
     private String name;
@@ -68,7 +68,7 @@ class FreedomModbusLocator {
      * @param configuration
      * @param i
      */
-    FreedomModbusLocator(Config configuration, int i) {
+    FreedomoticModbusLocator(Config configuration, int i) {
 
         name = configuration.getTuples().getStringProperty(i, "Name", "DefaultName");
         slaveId = configuration.getTuples().getIntProperty(i, "SlaveId", 0);
@@ -191,7 +191,7 @@ class FreedomModbusLocator {
      */
     void fillEvent(BatchResults<String> results, GenericEvent event) {
         //GenericEvent event = new GenericEvent(sensor);
-        //TODO: We can use a switch over the eventName to send a more specialiced event               
+        //TODO: We can use a switch over the eventName to send a more specialized event               
         String value;
         if (bit != -1) //it's a bit value
         {
@@ -232,8 +232,8 @@ class FreedomModbusLocator {
     }
 
     /**
-     * Transforms the value using the FreedomModbusLocator information to
-     * translate from / to freedom to modbus scales
+     * Transforms the value using the FreedomoticModbusLocator information to
+     * translate from/to Freedomotic to Modbus scales
      *
      * @param value the value to transform
      * @return the transformed value
@@ -255,7 +255,7 @@ class FreedomModbusLocator {
     }
 
     /**
-     * @return the Name
+     * @return the name
      */
     public String getName() {
         return name;
