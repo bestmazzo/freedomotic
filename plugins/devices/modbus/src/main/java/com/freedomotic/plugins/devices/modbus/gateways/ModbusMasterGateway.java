@@ -48,11 +48,10 @@ public class ModbusMasterGateway {
 //        //private static boolean echo = false;
 //        private static int receiveTimeout = 10000;//10 seconds
 //        private static int retries = 1;
-
     /**
      *
      */
-        public ModbusMasterGateway() {
+    public ModbusMasterGateway() {
     }
 
     /**
@@ -101,6 +100,7 @@ public class ModbusMasterGateway {
         ModbusFactory factory = new ModbusFactory();
         //SerialParameters params = new SerialParameters();
         String commPortId = configuration.getStringProperty("port", PORT_NAME);
+        System.out.println("port name: " + commPortId);
         int baudRate = configuration.getIntProperty("baudrate", PORT_BAUDRATE);
         System.out.println("baudrate: " + baudRate);
         int dataBits = configuration.getIntProperty("data-bits", PORT_DATABITS);

@@ -1,25 +1,22 @@
 /**
  *
- * Copyright (c) 2009-2016 Freedomotic team
- * http://freedomotic.com
+ * Copyright (c) 2009-2016 Freedomotic team http://freedomotic.com
  *
  * This file is part of Freedomotic
  *
- * This Program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
+ * This Program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2, or (at your option) any later version.
  *
- * This Program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This Program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Freedomotic; see the file COPYING.  If not, see
+ * You should have received a copy of the GNU General Public License along with
+ * Freedomotic; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 package com.freedomotic.plugins.devices.modbus;
 
 import com.serotonin.modbus4j.BatchRead;
@@ -40,7 +37,6 @@ import com.freedomotic.model.ds.Config;
  *
  * @author gpt
  */
-
 class FreedomoticModbusLocator {
 
     private BaseLocator modbusLocator;
@@ -81,11 +77,9 @@ class FreedomoticModbusLocator {
         objectClass = configuration.getTuples().getStringProperty(i, "objectClass", "");
         objectBehavior = configuration.getTuples().getStringProperty(i, "objectBehavior", "");
 
-
         //TODO: The Modbus4j functionality must be extend to allow to read and combine several "bit" values from
         // the same register. For example bit1&bit2 generates a 4 four states value and there are Slaves that uses this format,
         // and should be abstracted.
-
         //we try to parse the bit value.
         bit = Byte.valueOf(configuration.getTuples().getStringProperty(i, "Bit", "-1"));
         if (bit != -1) {

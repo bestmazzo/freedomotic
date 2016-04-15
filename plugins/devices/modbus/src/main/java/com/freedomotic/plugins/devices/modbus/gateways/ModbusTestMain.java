@@ -1,25 +1,22 @@
 /**
  *
- * Copyright (c) 2009-2016 Freedomotic team
- * http://freedomotic.com
+ * Copyright (c) 2009-2016 Freedomotic team http://freedomotic.com
  *
  * This file is part of Freedomotic
  *
- * This Program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
+ * This Program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2, or (at your option) any later version.
  *
- * This Program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This Program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Freedomotic; see the file COPYING.  If not, see
+ * You should have received a copy of the GNU General Public License along with
+ * Freedomotic; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 package com.freedomotic.plugins.devices.modbus.gateways;
 
 import com.serotonin.modbus4j.ModbusMaster;
@@ -34,17 +31,16 @@ import com.freedomotic.model.ds.Config;
 
 /**
  *
- * @author gpt
+ * @author Gabriel Pulido de Torres
  */
-
 public class ModbusTestMain {
-    
+
     private static String PORT_NAME = "/dev/ttyUSB10";
     private static int PORT_BAUDRATE = 19200;
     private static int PORT_DATABITS = 8;
     private static int PORT_PARITY = 2;//even
-    private static int PORT_STOPBITS = 1; 
-    
+    private static int PORT_STOPBITS = 1;
+
     /**
      * @param args
      * @throws Exception
@@ -66,9 +62,6 @@ public class ModbusTestMain {
         //TCP Test
         config.setProperty("host", "192.168.1.9");
         config.setProperty("tcpport", String.valueOf(502));
-
-
-
 
         ModbusMaster master = ModbusMasterGateway.getInstance(config);
         try {
