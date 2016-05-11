@@ -28,6 +28,7 @@ import com.serotonin.modbus4j.exception.ModbusTransportException;
 import com.serotonin.modbus4j.locator.NumericLocator;
 //import gnu.io.SerialPort;
 import com.freedomotic.model.ds.Config;
+import com.serotonin.modbus4j.locator.BinaryLocator;
 
 /**
  *
@@ -35,11 +36,11 @@ import com.freedomotic.model.ds.Config;
  */
 public class ModbusTestMain {
 
-    private static String PORT_NAME = "/dev/ttyUSB10";
-    private static int PORT_BAUDRATE = 19200;
-    private static int PORT_DATABITS = 8;
-    private static int PORT_PARITY = 2;//even
-    private static int PORT_STOPBITS = 1;
+    private static final String PORT_NAME = "/dev/ttyUSB10";
+    private static final int PORT_BAUDRATE = 19200;
+    private static final int PORT_DATABITS = 8;
+    private static final int PORT_PARITY = 2;//even
+    private static final int PORT_STOPBITS = 1;
 
     /**
      * @param args
@@ -60,15 +61,21 @@ public class ModbusTestMain {
         config.setProperty("stop-bits", String.valueOf(PORT_STOPBITS));
 
         //TCP Test
-        config.setProperty("host", "192.168.1.9");
-        config.setProperty("tcpport", String.valueOf(502));
+        config.setProperty("host", "192.168.2.59");
+        config.setProperty("tcpport", String.valueOf(4001));
+        config.setProperty("encapsulated", "true");
 
         ModbusMaster master = ModbusMasterGateway.getInstance(config);
         try {
             master.init();
-            NumericLocator bl = new NumericLocator(1, RegisterRange.HOLDING_REGISTER, 266, DataType.TWO_BYTE_INT_UNSIGNED);
+            //NumericLocator bl = new NumericLocator(2, RegisterRange.HOLDING_REGISTER, 42, DataType.BINARY);
+            BinaryLocator bl = new BinaryLocator(2,  RegisterRange.HOLDING_REGISTER, 42, 0);
             System.out.println("readed value: " + master.getValue(bl));
-            master.setValue(bl, 1);
+            //master.setValue(bl, 1);
+            NumericLocator nl = new NumericLocator(2, RegisterRange.HOLDING_REGISTER, 13, DataType.TWO_BYTE_INT_UNSIGNED);
+            master.setValue(nl, "1");
+            
+           
 
         } catch (ModbusTransportException ex) {
             System.out.println("error1: " + ex.toString());

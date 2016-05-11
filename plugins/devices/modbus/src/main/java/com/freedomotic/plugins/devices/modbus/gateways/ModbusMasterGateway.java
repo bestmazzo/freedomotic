@@ -37,13 +37,13 @@ public class ModbusMasterGateway {
     //class attributes
     private static ModbusMaster master = null;  //Singleton reference
     private static String connectionInfo = "No connected";
-    private static String PORT_NAME = "/dev/ttyUSB10";
-    private static int PORT_BAUDRATE = 19200;
-    private static int PORT_DATABITS = 8;
-    private static int PORT_PARITY = 2;//even
-    private static int PORT_STOPBITS = 1;
-    private static int PORT_FLOW_CONTROL_IN = 1; // to check
-    private static int PORT_FLOW_CONTROL_OUT = 1; // to check
+    private static final String PORT_NAME = "/dev/ttyUSB10";
+    private static final int PORT_BAUDRATE = 19200;
+    private static final int PORT_DATABITS = 8;
+    private static final int PORT_PARITY = 2;//even
+    private static final int PORT_STOPBITS = 1;
+    private static final int PORT_FLOW_CONTROL_IN = 1; // to check
+    private static final int PORT_FLOW_CONTROL_OUT = 1; // to check
 
 //        //private static boolean echo = false;
 //        private static int receiveTimeout = 10000;//10 seconds
@@ -72,7 +72,7 @@ public class ModbusMasterGateway {
             return master;
         } else {
             String modbusProtocol = configuration.getStringProperty("modbus-protocol", "TCP");
-            if (modbusProtocol == "TCP") {
+            if ("TCP".equals(modbusProtocol)) {
                 configureTCP(configuration);
             } else {
                 configureSerial(configuration);
@@ -80,8 +80,10 @@ public class ModbusMasterGateway {
             //private static boolean echo = false;
             int receiveTimeout = configuration.getIntProperty("timeout", 5000);//5 seconds
             int retries = configuration.getIntProperty("retries", 1);
+            boolean multiwrites = configuration.getBooleanProperty("multiwrite-always", false);
             master.setTimeout(receiveTimeout);
             master.setRetries(retries);
+            master.setMultipleWritesOnly(multiwrites);
             return master;
         }
 
@@ -131,9 +133,12 @@ public class ModbusMasterGateway {
         System.out.println("host: " + host);
         int tcpport = configuration.getIntProperty("tcp-port", 502);
         System.out.println("tcpport: " + tcpport);
+        Boolean encap = configuration.getBooleanProperty("encapsulated", false);
+        params.setEncapsulated(encap);
         params.setHost(host);
         params.setPort(tcpport);
         master = factory.createTcpMaster(params, true);
         connectionInfo = "TCP Connection to: " + host + ":" + tcpport;
     }
+    
 }
