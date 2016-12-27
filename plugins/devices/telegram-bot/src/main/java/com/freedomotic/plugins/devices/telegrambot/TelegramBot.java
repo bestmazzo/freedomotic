@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.updateshandlers.FreedomoticBotHandlers;
 
 /**
  *

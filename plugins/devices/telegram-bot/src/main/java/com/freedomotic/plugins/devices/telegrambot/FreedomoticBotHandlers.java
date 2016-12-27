@@ -17,7 +17,7 @@
  * Freedomotic; see the file COPYING. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.telegram.updateshandlers;
+package com.freedomotic.plugins.devices.telegrambot;
 
 import com.freedomotic.api.API;
 import com.freedomotic.api.Client;
@@ -40,6 +40,7 @@ import static com.freedomotic.app.Freedomotic.INJECTOR;
 import com.freedomotic.behaviors.BehaviorLogic;
 import com.freedomotic.environment.Room;
 import com.freedomotic.events.ObjectReceiveClick;
+import com.freedomotic.i18n.I18n;
 import com.freedomotic.model.environment.Zone;
 import com.freedomotic.model.object.EnvObject;
 import com.freedomotic.reactions.Command;
@@ -78,6 +79,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
     final private String INDEX_OUT_OF_RANGE = "Requested index is out of range!";
     final private String ERROR = "There was an error during your request";
     final private API api;
+    private final I18n i18n; 
 
     private enum excludedPlugins {
 
@@ -92,6 +94,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
      */
     public FreedomoticBotHandlers(String botToken, String botUsername, String chatID) {
         this.api = INJECTOR.getInstance(API.class);
+        this.i18n = api.getI18n();
         this.botToken = botToken;
         this.botUsername = botUsername;
         this.chatID = chatID;
@@ -624,18 +627,22 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
         return status;
     }
 
+    /**
+     * 
+     * @param message 
+     */
     private void mainMenu(Message message) {
 
         SendMessage sendMessagerequest = new SendMessage();
         sendMessagerequest.setChatId(message.getChatId().toString());
-        sendMessagerequest.setText("Hello it's Freedomotic");
+        sendMessagerequest.setText(i18n.msg("welcome_message"));
 
         // main keyboard
         KeyboardRow row = new KeyboardRow();
-        row.add(new KeyboardButton("Rooms"));
-        row.add(new KeyboardButton("Things"));
+        row.add(new KeyboardButton(i18n.msg("rooms")));
+        row.add(new KeyboardButton(i18n.msg("objects")));
         KeyboardRow row2 = new KeyboardRow();
-        row2.add(new KeyboardButton("Plugins"));
+        row2.add(new KeyboardButton(i18n.msg("plugins")));
         row2.add(new KeyboardButton("System"));
         ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
         markup.setResizeKeyboard(true);
