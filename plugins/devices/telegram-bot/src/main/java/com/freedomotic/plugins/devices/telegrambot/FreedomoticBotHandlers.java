@@ -79,7 +79,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
     final private String INDEX_OUT_OF_RANGE = "Requested index is out of range!";
     final private String ERROR = "There was an error during your request";
     final private API api;
-    private final I18n i18n; 
+    private final I18n i18n;
 
     private enum excludedPlugins {
 
@@ -127,7 +127,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
 
         if (update.hasMessage()) {
             Message message = update.getMessage();
-
+            SendMessage sendMessagerequest;
             if (message.hasText()) {
 
                 //manage '/execute' commands
@@ -136,65 +136,28 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
                     mainMenu(message);
                 } else {
                     String[] input = message.getText().split(" ");
-                    SendMessage sendMessagerequest;
 
-                    switch (input[0]) {
-                        case "/start":
+                    if (input[0].equalsIgnoreCase("/start")) {
+                        mainMenu(message);
+                    } else if (input[0].equalsIgnoreCase(i18n.msg("plugins").trim())) {
 
-                            mainMenu(message);
-                            break;
+                        sendTelegramMessage(message.getChatId().toString(),
+                                "Here is a list of your plugins. Please use Back and Next to navigate through them.",
+                                true,
+                                this.getPluginView(0, -1));
 
-                        case "Plugins":
+                    } else if (input[0].equalsIgnoreCase(i18n.msg("rooms").trim())) {
 
-                            sendMessagerequest = new SendMessage();
-                            sendMessagerequest.setChatId(message.getChatId().toString());
-                            sendMessagerequest.setText("Here is a list of your plugins. Please use Back and Next to navigate through them.");
-                            sendMessagerequest.enableMarkdown(true);
+                        sendTelegramMessage(message.getChatId().toString(),
+                                "Here is a list of your rooms. Please use Back and Next to navigate through them.",
+                                true,
+                                this.getRoomView(0, -1));
 
-                            sendMessagerequest.setReplyMarkup(this.getPluginView(0, -1));
-
-                            try {
-                                sendMessage(sendMessagerequest);
-                            } catch (TelegramApiException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-
-                        case "Rooms":
-
-                            sendMessagerequest = new SendMessage();
-                            sendMessagerequest.setChatId(message.getChatId().toString());
-                            sendMessagerequest.setText("Here is a list of your rooms. Please use Back and Next to navigate through them.");
-                            sendMessagerequest.enableMarkdown(true);
-
-                            sendMessagerequest.setReplyMarkup(this.getRoomView(0, -1));
-
-                            try {
-                                sendMessage(sendMessagerequest);
-                            } catch (TelegramApiException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-
-                        case "System":
-
-                            break;
-
-                        case "Things":
-
-                            sendMessagerequest = new SendMessage();
-                            sendMessagerequest.setChatId(message.getChatId().toString());
-                            sendMessagerequest.setText("Here is a list of your things. Please use Back and Next to navigate through them.");
-                            sendMessagerequest.enableMarkdown(true);
-
-                            sendMessagerequest.setReplyMarkup(this.getThingView(0, -1));
-
-                            try {
-                                sendMessage(sendMessagerequest);
-                            } catch (TelegramApiException e) {
-                                e.printStackTrace();
-                            }
-                            break;
+                    } else if (input[0].equalsIgnoreCase(i18n.msg("objects").trim())) {
+                        sendTelegramMessage(message.getChatId().toString(),
+                                "Here is a list of your things. Please use Back and Next to navigate through them.",
+                                true,
+                                this.getThingView(0, -1));
 
                     }
 
@@ -315,18 +278,11 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                 } else {
-
-                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
-                    editMarkup.setChatId(callbackquery.getMessage().getChatId().toString());
-                    editMarkup.setInlineMessageId(callbackquery.getInlineMessageId());
-                    editMarkup.setMessageId(callbackquery.getMessage().getMessageId());
-                    editMarkup.setReplyMarkup(markup);
-                    try {
-                        editMessageReplyMarkup(editMarkup);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-
+                    editMessageMarkup(
+                            callbackquery.getMessage().getChatId().toString(),
+                            callbackquery.getInlineMessageId(),
+                            callbackquery.getMessage().getMessageId(),
+                            markup);
                 }
             } else if (section.equals("things")) {
 
@@ -375,17 +331,11 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                 } else {
-
-                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
-                    editMarkup.setChatId(callbackquery.getMessage().getChatId().toString());
-                    editMarkup.setInlineMessageId(callbackquery.getInlineMessageId());
-                    editMarkup.setMessageId(callbackquery.getMessage().getMessageId());
-                    editMarkup.setReplyMarkup(markup);
-                    try {
-                        editMessageReplyMarkup(editMarkup);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
+                    editMessageMarkup(
+                            callbackquery.getMessage().getChatId().toString(),
+                            callbackquery.getInlineMessageId(),
+                            callbackquery.getMessage().getMessageId(),
+                            markup);
                 }
 
             } else if (section.equals("rooms")) {
@@ -411,17 +361,11 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                 } else {
-
-                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
-                    editMarkup.setChatId(callbackquery.getMessage().getChatId().toString());
-                    editMarkup.setInlineMessageId(callbackquery.getInlineMessageId());
-                    editMarkup.setMessageId(callbackquery.getMessage().getMessageId());
-                    editMarkup.setReplyMarkup(markup);
-                    try {
-                        editMessageReplyMarkup(editMarkup);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
+                    editMessageMarkup(
+                            callbackquery.getMessage().getChatId().toString(),
+                            callbackquery.getInlineMessageId(),
+                            callbackquery.getMessage().getMessageId(),
+                            markup);
                 }
 
             } else if (section.equals("rooms-things")) {
@@ -461,17 +405,11 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                 } else {
-
-                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
-                    editMarkup.setChatId(callbackquery.getMessage().getChatId().toString());
-                    editMarkup.setInlineMessageId(callbackquery.getInlineMessageId());
-                    editMarkup.setMessageId(callbackquery.getMessage().getMessageId());
-                    editMarkup.setReplyMarkup(markup);
-                    try {
-                        editMessageReplyMarkup(editMarkup);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
+                    editMessageMarkup(
+                            callbackquery.getMessage().getChatId().toString(),
+                            callbackquery.getInlineMessageId(),
+                            callbackquery.getMessage().getMessageId(),
+                            markup);
                 }
             }
         }
@@ -628,8 +566,8 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
     }
 
     /**
-     * 
-     * @param message 
+     *
+     * @param message
      */
     private void mainMenu(Message message) {
 
@@ -763,6 +701,44 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
         answerCallbackQuery.setShowAlert(alert);
         answerCallbackQuery.setText(text);
         answerCallbackQuery(answerCallbackQuery);
+    }
+
+    /**
+     *
+     *
+     *
+     * @param chatID
+     * @param text
+     * @param enableMarkdown
+     * @param replyMarkup
+     */
+    public void sendTelegramMessage(String chatID, String text, boolean enableMarkdown, InlineKeyboardMarkup replyMarkup) {
+        SendMessage sendMessagerequest = new SendMessage();
+        sendMessagerequest.setChatId(chatID);
+        sendMessagerequest.setText(text);
+        sendMessagerequest.enableMarkdown(enableMarkdown);
+
+        sendMessagerequest.setReplyMarkup(replyMarkup);
+
+        try {
+            sendMessage(sendMessagerequest);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void editMessageMarkup(String chatID, String inlineMessageID, Integer messageID, InlineKeyboardMarkup markup) {
+
+        EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
+        editMarkup.setChatId(chatID);
+        editMarkup.setInlineMessageId(inlineMessageID);
+        editMarkup.setMessageId(messageID);
+        editMarkup.setReplyMarkup(markup);
+        try {
+            editMessageReplyMarkup(editMarkup);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
