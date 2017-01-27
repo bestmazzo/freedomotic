@@ -42,6 +42,7 @@ import com.freedomotic.environment.Room;
 import com.freedomotic.events.ObjectReceiveClick;
 import com.freedomotic.i18n.I18n;
 import com.freedomotic.model.environment.Zone;
+import com.freedomotic.model.object.Behavior;
 import com.freedomotic.model.object.EnvObject;
 import com.freedomotic.reactions.Command;
 import com.freedomotic.things.EnvObjectLogic;
@@ -118,6 +119,10 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
         return botToken;
     }
 
+    public String getChatID() {
+        return chatID;
+    }
+
     /**
      *
      * @param update
@@ -188,23 +193,6 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
                         markup = this.getPluginView(Integer.parseInt(target), 2);
                         break;
 
-                    case "status":
-                        responseToUser = "";
-                        response = this.pluginStatus(data[3]);
-                        if (response) {
-                            responseToUser = "Plugin running";
-                        } else {
-                            responseToUser = "Plugin not running";
-                        }
-                        try {
-                            this.sendAnswerCallbackQuery(responseToUser, true, callbackquery);
-                            getPluginView(Integer.parseInt(target) - 1, 2);
-                        } catch (TelegramApiException e) {
-                            e.printStackTrace();
-                        }
-
-                        break;
-
                     case "start":
                         start = false;
                         startStr = "stopped";
@@ -227,7 +215,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
                         }
                         try {
                             this.sendAnswerCallbackQuery(responseToUser, true, callbackquery);
-                            getPluginView(Integer.parseInt(target) - 1, 2);
+                            markup = getPluginView(Integer.parseInt(target) - 1, 2);
                         } catch (TelegramApiException e) {
                             e.printStackTrace();
                         }
@@ -255,7 +243,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
                         }
                         try {
                             this.sendAnswerCallbackQuery(responseToUser, true, callbackquery);
-                            getPluginView(Integer.parseInt(target) - 1, 2);
+                            markup = getPluginView(Integer.parseInt(target) - 1, 2);
                         } catch (TelegramApiException e) {
                             e.printStackTrace();
                         }
@@ -311,6 +299,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
 
                     try {
                         this.sendAnswerCallbackQuery(responseStr, true, callbackquery);
+                        markup = getThingView(Integer.parseInt(target) - 1, 2);
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
@@ -566,6 +555,56 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
     }
 
     /**
+     * 
+     * @param uuid
+     * @return 
+     */
+    
+    // TODO set type->behavior in manifest file
+    private String getMainThingStatus(String uuid) {
+        String status = "";
+        EnvObjectLogic thing = api.things().findOne(uuid);
+
+        switch (thing.getPojo().getSimpleType()) {
+
+            case "barometer":
+                status = "pressure: " + thing.getBehavior("pressure").getValueAsString();
+                break;
+
+            case "gate":
+                status = "open: " + thing.getBehavior("open").getValueAsString();
+                break;
+
+            case "hygrometer":
+                status = "humidity: " + thing.getBehavior("humidity").getValueAsString();
+                break;
+
+            case "light":
+                status = "powered: " + thing.getBehavior("powered").getValueAsString();
+                break;
+
+            case "lightsensor":
+                status = "luminosity: " + thing.getBehavior("luminosity").getValueAsString();
+                break;
+
+            case "switch":
+                status = "powered: " + thing.getBehavior("powered").getValueAsString();
+                break;
+
+            case "thermometer":
+                status = "temperature: " + thing.getBehavior("temperature").getValueAsString();
+                break;
+
+            case "thermostat":
+                status = "temperature: " + thing.getBehavior("temperature").getValueAsString();
+                break;
+
+        }
+        return status;
+        //return thing.getPojo().getSimpleType();
+    }
+
+    /**
      *
      * @param message
      */
@@ -628,17 +667,18 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
 
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
         Plugin plugin = pluginsList.get(index);
-        rowInline.add(new InlineKeyboardButton().setText(plugin.getName()).setCallbackData("plugins:text:" + index + ":" + plugin.getClassName()));
+        rowInline.add(new InlineKeyboardButton().setText(plugin.getName() + "\n" + plugin.getStatus()).setCallbackData("plugins:text:" + index + ":" + plugin.getClassName()));
 
         List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
         rowInline2.add(new InlineKeyboardButton().setText(BACK).setCallbackData("plugins:back:" + index + ":" + plugin.getClassName()));
         rowInline2.add(new InlineKeyboardButton().setText(NEXT).setCallbackData("plugins:next:" + index + ":" + plugin.getClassName()));
 
         List<InlineKeyboardButton> rowInline3 = new ArrayList<>();
-        rowInline3.add(new InlineKeyboardButton().setText(START).setCallbackData("plugins:start:" + index + ":" + plugin.getClassName()));
-        rowInline3.add(new InlineKeyboardButton().setText(STATUS).setCallbackData("plugins:status:" + index + ":" + plugin.getClassName()));
-        rowInline3.add(new InlineKeyboardButton().setText(STOP).setCallbackData("plugins:stop:" + index + ":" + plugin.getClassName()));
-        //rowInline3.add(new InlineKeyboardButton().setText(DELETE).setCallbackData("plugins:delete:" + index + ":" + plugin.getClassName()));
+        if (!plugin.isRunning()) {
+            rowInline3.add(new InlineKeyboardButton().setText(START).setCallbackData("plugins:start:" + index + ":" + plugin.getClassName()));
+        } else {
+            rowInline3.add(new InlineKeyboardButton().setText(STOP).setCallbackData("plugins:stop:" + index + ":" + plugin.getClassName()));
+        }
 
         rowsInline.add(rowInline);
         rowsInline.add(rowInline3);
@@ -723,7 +763,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
         try {
             sendMessage(sendMessagerequest);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            LOG.error("Error sending Telegram message", e.getLocalizedMessage());
         }
     }
 
@@ -773,7 +813,7 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
 
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(new InlineKeyboardButton().setText(thing.getName()).setCallbackData("things:text:" + index + ":" + thing.getUUID()));
+        rowInline.add(new InlineKeyboardButton().setText(thing.getName() + "\n" + getMainThingStatus(thing.getUUID())).setCallbackData("things:text:" + index + ":" + thing.getUUID()));
 
         List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
         rowInline2.add(new InlineKeyboardButton().setText(BACK).setCallbackData("things:back:" + index + ":" + thing.getUUID()));
@@ -899,11 +939,15 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(chatID);
         message.setText(text);
-        try {
-            sendMessage(message);
-        } catch (TelegramApiException ex) {
-            LOG.error("Error sending the message ", ex);
+
+        if (getChatID().equalsIgnoreCase(chatID)) {
+            try {
+                sendMessage(message);
+            } catch (TelegramApiException ex) {
+                LOG.error("Error sending the message ", ex);
+            }
         }
+
     }
 
     /**

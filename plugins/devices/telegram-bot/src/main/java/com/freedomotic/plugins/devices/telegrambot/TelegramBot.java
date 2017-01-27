@@ -27,6 +27,7 @@ import com.freedomotic.reactions.Command;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -71,6 +72,8 @@ public class TelegramBot
 
     @Override
     protected void onStart() {
+        
+        ApiContextInitializer.init(); 
         telegramBotsApi = new TelegramBotsApi();
         fdBotHandler = new FreedomoticBotHandlers(BOT_TOKEN, BOT_USERNAME, CHAT_ID);
         try {
@@ -83,6 +86,7 @@ public class TelegramBot
 
     @Override
     protected void onStop() {
+        
         LOG.info("Telegram Bot plugin stopped");
     }
 
