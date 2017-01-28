@@ -75,7 +75,7 @@ public class TelegramBot
         
         ApiContextInitializer.init(); 
         telegramBotsApi = new TelegramBotsApi();
-        fdBotHandler = new FreedomoticBotHandlers(BOT_TOKEN, BOT_USERNAME, CHAT_ID);
+        fdBotHandler = new FreedomoticBotHandlers(BOT_TOKEN, BOT_USERNAME, CHAT_ID, this);
         try {
             telegramBotsApi.registerBot(fdBotHandler);
         } catch (TelegramApiException e) {

@@ -22,6 +22,7 @@ package com.freedomotic.plugins.devices.telegrambot;
 import com.freedomotic.api.API;
 import com.freedomotic.api.Client;
 import com.freedomotic.api.Plugin;
+import com.freedomotic.api.Protocol;
 import org.telegram.telegrambots.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -36,7 +37,6 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboar
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import com.freedomotic.app.Freedomotic;
-import static com.freedomotic.app.Freedomotic.INJECTOR;
 import com.freedomotic.behaviors.BehaviorLogic;
 import com.freedomotic.environment.Room;
 import com.freedomotic.events.ObjectReceiveClick;
@@ -93,8 +93,8 @@ public class FreedomoticBotHandlers extends TelegramLongPollingBot {
      * @param botUsername
      * @param chatID
      */
-    public FreedomoticBotHandlers(String botToken, String botUsername, String chatID) {
-        this.api = INJECTOR.getInstance(API.class);
+    public FreedomoticBotHandlers(String botToken, String botUsername, String chatID, Protocol master) {
+        this.api = master.getApi();
         this.i18n = api.getI18n();
         this.botToken = botToken;
         this.botUsername = botUsername;
